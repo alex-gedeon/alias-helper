@@ -1,0 +1,7 @@
+*.exe
+formatted
+testing/
+historical/
+.vscode/
+local/
+bash_aliases_backups/
