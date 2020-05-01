@@ -6,16 +6,12 @@ If you hate typing repetitive commands like `cd /mnt/c/....`, `explorer.exe .`, 
 
 Current functionality:
 
-1. Command line parsing
+- Command line parsing
+- Prints a table to display aliases
 
 Future plans:
 
-1. Create aliases locally (in ~/.bash_aliases file)
-
-2. Display nice table of aliases
-
-3. Remove displayed aliases
-
-4. Remove previously added aliases (from ~/.bash_aliases)
-
-5. Installation script
+- Create aliases locally (in ~/.bash_aliases file)
+- Remove displayed aliases
+- Remove previously added aliases (from ~/.bash_aliases)
+- Installation script

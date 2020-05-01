@@ -1,6 +1,5 @@
 #include <getopt.h>
 
-#include <experimental/filesystem>
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -12,36 +11,35 @@ using namespace std;
 void parse_command_line(int argc, char** argv, string& type, string& file_path, unordered_map<string, int>& passed_args);
 void print_invalid_input();
 
+/* Driver for table program, expects a path to the /local/ directory with
+an unformatted file with 3 columns, separated with a #. This functionality
+can be expanded to as many columns as inputted later, but for the purposes
+of this project it will only need 3 columns, for type, alias, and description.
+The ID column will be drived from the line number that each entry is on in
+the unformatted file, allowing the use of a blacklist file with a list of IDs
+not to be displayed.
+
+The blacklisting itself will be done with a bash script, and will be read in
+separately by this program. blacklist.txt should be in the /local/ folder as
+well. */
 int main(int argc, char** argv) {
-	if (argc == 1) {
+	// Error checking, primarily for testing and so rogue inputs don't cause errors
+	if (argc < 3) {
+		// Minimum is 3 since 2 flags are required (plus one for program itself).
 		cout << "Wrong usage. Try with -h for help" << endl;
 		exit(1);
 	}
-	// Parse command line arguments
+	/* Parse command line arguments using an unordered map and two strings to ease
+	returning data. Could probably just use two maps for more general use later,
+	like one from <string, string>, and another from <int, int>. */
 	string table_type, file_path;
 	unordered_map<string, int> passed_args;
 	parse_command_line(argc, argv, table_type, file_path, passed_args);
 
-	// Check if /local/ path exists. If it doesn't, create it
+	string local_path = file_path + "/local/";
+	// ! cout << "local path: " << local_path << endl;
 
-	// Passed in directory is the directory to the Makefile, or to the bin/ folder.
-	// Works out really conveniently actually, just need to remove last
-	// section of the path in all cases.
-
-	// Ideally it should be to the root project directory itself, but I can't figure
-	// out how to do that in make.
-	string root_path = file_path.substr(0, file_path.find_last_of('/'));
-	// cout << "root path: " << root_path << endl;
-	string local_path = root_path + "/local/";
-	// cout << "local path: " << local_path << endl;
-
-	if (!experimental::filesystem::v1::exists(local_path)) {
-		cout << "creating local folder" << endl;
-		experimental::filesystem::v1::create_directory(local_path);
-	}
-
-	string input_addition;
-	string output_addition;
+	string input_addition, output_addition;
 
 	if (table_type == "alias") {
 		input_addition = "aliases_unformatted.txt";
