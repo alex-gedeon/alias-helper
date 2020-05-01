@@ -7,15 +7,16 @@
 
 using namespace std;
 
-Table::Table(string path_in, int length_id_in, int length_type_in,
+Table::Table(string path_input_in, string path_output_in, int length_id_in, int length_type_in,
 			 int length_alias_in, int length_desc_in)
-	: path(path_in), length_id(length_id_in), length_type(length_type_in), length_alias(length_alias_in), length_desc(length_desc_in) {
-	fout.open(path + "aliases_formatted.txt");
+	: path_input(path_input_in), path_output(path_output_in), length_id(length_id_in), length_type(length_type_in), length_alias(length_alias_in), length_desc(length_desc_in) {
+	cout << "path in: " << path_input << ", path out: " << path_output << endl;
+	/* fout.open(path + "aliases_formatted.txt");
 	fout << "test formatted" << endl;
 	fin.open(path + "aliases_unformatted.txt");
 	string line;
 	fin >> line;
-	cout << "in unformatted: " << line << endl;
+	cout << "in unformatted: " << line << endl; */
 }
 
 void Table::output_horizontal_line() {

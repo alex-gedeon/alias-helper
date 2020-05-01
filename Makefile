@@ -17,3 +17,5 @@ clean:
 	rm -f *.exe
 	rm -f src/*.exe
 	rm -f testing/*.exe
+
+install: clean

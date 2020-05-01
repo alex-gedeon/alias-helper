@@ -13,31 +13,45 @@ void parse_command_line(int argc, char** argv, string& type, string& file_path, 
 void print_invalid_input();
 
 int main(int argc, char** argv) {
+	if (argc == 1) {
+		cout << "Wrong usage. Try with -h for help" << endl;
+		exit(1);
+	}
 	// Parse command line arguments
-	string type, file_path;
+	string table_type, file_path;
 	unordered_map<string, int> passed_args;
-	parse_command_line(argc, argv, type, file_path, passed_args);
-
-	cout << "type: " << type << ", path: " << file_path << endl;
-
-	return 0;
+	parse_command_line(argc, argv, table_type, file_path, passed_args);
 
 	// Check if /local/ path exists. If it doesn't, create it
 
 	// Passed in directory is the directory to the Makefile, or to the bin/ folder.
 	// Works out really conveniently actually, just need to remove last
 	// section of the path in all cases.
-	string temp_path = string(argv[1]);
-	string root_path = temp_path.substr(0, temp_path.find_last_of('/'));
-	cout << "root:" << root_path << endl;
-	string local_path = root_path + "/local/";
-	cout << "local path: " << local_path << endl;
 
-	if (!experimental::filesystem::v1::exists(root_path + "/local/")) {
-		experimental::filesystem::v1::create_directory(root_path + "/local/");
+	// Ideally it should be to the root project directory itself, but I can't figure
+	// out how to do that in make.
+	string root_path = file_path.substr(0, file_path.find_last_of('/'));
+	// cout << "root path: " << root_path << endl;
+	string local_path = root_path + "/local/";
+	// cout << "local path: " << local_path << endl;
+
+	if (!experimental::filesystem::v1::exists(local_path)) {
+		cout << "creating local folder" << endl;
+		experimental::filesystem::v1::create_directory(local_path);
 	}
 
-	Table table(local_path);
+	string input_addition;
+	string output_addition;
+
+	if (table_type == "alias") {
+		input_addition = "aliases_unformatted.txt";
+		output_addition = "aliases_formatted.txt";
+	} else {
+		input_addition = "variables_unformatted.txt";
+		output_addition = "variables_formatted.txt";
+	}
+
+	Table table(local_path + input_addition, local_path + output_addition);
 	table.print();
 }
 
