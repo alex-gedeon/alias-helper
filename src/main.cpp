@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 	string local_path = file_path + "/local/";
 	// ! cout << "local path: " << local_path << endl;
 
-	string input_addition, output_addition;
+	string input_addition, output_addition, blacklist_addition;
 
 	if (table_type == "alias") {
 		input_addition = "aliases_unformatted.txt";
@@ -48,8 +48,9 @@ int main(int argc, char** argv) {
 		input_addition = "variables_unformatted.txt";
 		output_addition = "variables_formatted.txt";
 	}
+	blacklist_addition = "blacklist.txt";
 
-	Table table(local_path + input_addition, local_path + output_addition);
+	Table table(local_path + input_addition, local_path + output_addition, local_path + blacklist_addition);
 	table.print();
 }
 

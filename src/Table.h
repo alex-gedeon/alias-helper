@@ -6,8 +6,10 @@ class Table {
    public:
 	// Expects an unformatted file path, and a formatted file output path.
 	// Other arguments are optional.
-	Table(std::string path_input_in, std::string path_output_in, int length_id_in = 3, int length_type_in = 10,
-		  int length_alias_in = 10, int length_desc_in = 40);
+	Table(std::string path_input_in, std::string path_output_in,
+		  std::string path_blacklist_in, int length_id_in = 3,
+		  int length_type_in = 10, int length_alias_in = 10,
+		  int length_desc_in = 40);
 
 	// Main driver for Table class. Should be only public method.
 	void print();
@@ -20,6 +22,7 @@ class Table {
 	void print_interior_line(std::string id, std::string type, std::string alias, std::string desc);
 	std::string pad_blanks(std::string &input, int column_width);
 	void trim_string(std::string &input);
+	bool id_in_blacklist(int id);
 	struct Datum {
 		int id;
 		std::string type;
@@ -42,11 +45,14 @@ class Table {
 
 	std::string path_input;
 	std::string path_output;
+	std::string path_blacklist;
 	int length_id;
 	int length_type;
 	int length_alias;
 	int length_desc;
 	std::ofstream fout;
 	std::ifstream fin;
+	std::ifstream blacklist_fin;
 	std::vector<Datum> data;
+	std::vector<int> blacklist;
 };

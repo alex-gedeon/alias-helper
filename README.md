@@ -8,10 +8,16 @@ Current functionality:
 
 - Command line parsing
 - Prints a table to display aliases
+- Create aliases locally (in ~/.bash_aliases file)
+- Remove displayed aliases with blacklist
+
+In development:
+
+- Remove aliases from blacklist
 
 Future plans:
 
-- Create aliases locally (in ~/.bash_aliases file)
-- Remove displayed aliases
-- Remove previously added aliases (from ~/.bash_aliases)
 - Installation script
+- Alias creation should fail if name has already been used, even if in blacklist
+- Allow user to create and view variables with similar functionality
+- Allow user to modify previously inputted type and description, maybe with override.txt, id#new_type#new_description. This should work even if you change information twice, since the program can just use whatever is farther along in the file

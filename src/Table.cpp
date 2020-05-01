@@ -8,12 +8,16 @@
 
 using namespace std;
 
-Table::Table(string path_input_in, string path_output_in, int length_id_in, int length_type_in,
-			 int length_alias_in, int length_desc_in)
-	: path_input(path_input_in), path_output(path_output_in), length_id(length_id_in), length_type(length_type_in), length_alias(length_alias_in), length_desc(length_desc_in) {
+Table::Table(string path_input_in, string path_output_in,
+			 string path_blacklist_in, int length_id_in,
+			 int length_type_in, int length_alias_in,
+			 int length_desc_in)
+	: path_input(path_input_in), path_output(path_output_in), path_blacklist(path_blacklist_in), length_id(length_id_in), length_type(length_type_in), length_alias(length_alias_in), length_desc(length_desc_in) {
 	// Opens unformatted file for input and formatted file for output.
+	// Also opens blacklisted file.
 	fin.open(path_input);
 	fout.open(path_output);
+	blacklist_fin.open(path_blacklist);
 }
 
 void Table::output_horizontal_line() {
@@ -38,6 +42,14 @@ void Table::read_in_and_sort() {
 	}
 	// Uses overloaded Datum < operator to sort
 	sort(data.begin(), data.end());
+
+	// Now, read in blacklist info
+	int blacklist_id = 0;
+	while (blacklist_fin >> blacklist_id) {
+		blacklist.push_back(blacklist_id);
+	}
+	fin.close();
+	blacklist_fin.close();
 }
 
 void Table::split_line_by_delimiter(const string &str, vector<string> &pieces, char delimiter) {
@@ -54,7 +66,11 @@ void Table::split_line_by_delimiter(const string &str, vector<string> &pieces, c
 void Table::trim_string(string &input) {
 	int first_non = input.find_first_not_of("\t\n ");
 	int last_non = input.find_last_not_of("\t\n ");
-	input = input.substr(first_non, last_non + 1 - first_non);
+	if (first_non == -1 || last_non == -1) {
+		input = "";
+	} else {
+		input = input.substr(first_non, last_non + 1 - first_non);
+	}
 }
 
 /* Pads left side with one blank, extends blanks to end of column.
@@ -86,16 +102,28 @@ void Table::print_header() {
 	print_interior_line("ID", "Type", "Alias", "Description");
 }
 
+bool Table::id_in_blacklist(int id) {
+	return find(blacklist.begin(), blacklist.end(), id) != blacklist.end();
+}
+
 void Table::print() {
 	read_in_and_sort();
 	print_header();
 	string curr_type = "";
 	for (auto datum : data) {
+		if (id_in_blacklist(datum.id)) continue;
+		// If this is the first occurence of the new type, print it.
 		if (curr_type != datum.type) {
 			output_horizontal_line();
 			curr_type = datum.type;
+			print_interior_line(to_string(datum.id), datum.type,
+								datum.alias, datum.description);
 		}
-		print_interior_line(to_string(datum.id), datum.type, datum.alias, datum.description);
+		// Otherwise, omit it.
+		else {
+			print_interior_line(to_string(datum.id), "",
+								datum.alias, datum.description);
+		}
 	}
 	output_horizontal_line();
 }
