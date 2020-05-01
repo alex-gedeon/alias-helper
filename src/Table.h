@@ -7,7 +7,7 @@ class Table {
 	// Expects an unformatted file path, and a formatted file output path.
 	// Other arguments are optional.
 	Table(std::string path_input_in, std::string path_output_in, int length_id_in = 3, int length_type_in = 10,
-		  int length_alias_in = 10, int length_desc_in = 30);
+		  int length_alias_in = 10, int length_desc_in = 40);
 
 	// Main driver for Table class. Should be only public method.
 	void print();
