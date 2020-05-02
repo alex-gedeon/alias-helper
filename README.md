@@ -10,10 +10,11 @@ Current functionality:
 - Prints a table to display aliases
 - Create aliases locally (in ~/.bash_aliases file)
 - Remove displayed aliases with blacklist
+- View inverse blacklist
 
 In development:
 
-- Remove aliases from blacklist
+- Remove aliases from blacklist (currently manually delete from text file)
 
 Future plans:
 
@@ -21,3 +22,4 @@ Future plans:
 - Alias creation should fail if name has already been used, even if in blacklist
 - Allow user to create and view variables with similar functionality
 - Allow user to modify previously inputted type and description, maybe with override.txt, id#new_type#new_description. This should work even if you change information twice, since the program can just use whatever is farther along in the file
+- Ability to change printed table size

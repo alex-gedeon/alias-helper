@@ -37,10 +37,9 @@ int main(int argc, char** argv) {
 	parse_command_line(argc, argv, table_type, file_path, passed_args);
 
 	string local_path = file_path + "/local/";
-	// ! cout << "local path: " << local_path << endl;
 
+	// Append filename extensions
 	string input_addition, output_addition, blacklist_addition;
-
 	if (table_type == "alias") {
 		input_addition = "aliases_unformatted.txt";
 		output_addition = "aliases_formatted.txt";
@@ -50,7 +49,8 @@ int main(int argc, char** argv) {
 	}
 	blacklist_addition = "blacklist.txt";
 
-	Table table(local_path + input_addition, local_path + output_addition, local_path + blacklist_addition);
+	Table table(local_path + input_addition, local_path + output_addition,
+				local_path + blacklist_addition, passed_args);
 	table.print();
 }
 
@@ -63,13 +63,14 @@ void parse_command_line(int argc, char* argv[], string& type, string& file_path,
 		{"help", no_argument, nullptr, 'h'},
 		{"type", required_argument, nullptr, 't'},
 		{"file_path", required_argument, nullptr, 'f'},
+		{"inv_blist", optional_argument, nullptr, 'b'},
 		{"length_id", optional_argument, nullptr, 'i'},
 		{"length_type", optional_argument, nullptr, 'y'},
 		{"length_alias", optional_argument, nullptr, 'a'},
 		{"length_desc", optional_argument, nullptr, 'd'},
 		{nullptr, 0, nullptr, '\0'}};
 
-	while ((choice = getopt_long(argc, argv, "ht:f:iyad", long_options, &option_index)) != -1) {
+	while ((choice = getopt_long(argc, argv, "ht:f:b:iyad", long_options, &option_index)) != -1) {
 		switch (choice) {
 			case 'h':
 				cout << "usage: ./formatted [options]\n";
@@ -77,6 +78,7 @@ void parse_command_line(int argc, char* argv[], string& type, string& file_path,
 					 << "  --help          or -h: [ OPTIONAL ] Prints helpful information.\n"
 					 << "  --type          or -t: [ REQUIRED ] Change type of inputted information. Requires argument \"alias\" or \"var\"\n"
 					 << "  --file_in       or -f: [ REQUIRED ] Unformatted input file.\n"
+					 << "  --inv_blist     or -b: [ OPTIONAL ] Boolean flag to invert the blacklist. Requires argument \"true\" or \"false\". Default is false.\n"
 					 << "  --length_id     or -i: [ OPTIONAL ] Specify the width of the \"id\" column. Default is 3.\n"
 					 << "  --length_type   or -y: [ OPTIONAL ] Specify the width of the \"type\" column. Default is 10.\n"
 					 << "  --length_alias  or -a: [ OPTIONAL ] Specify the width of the \"alias\" column. Default is 10.\n"
@@ -90,6 +92,11 @@ void parse_command_line(int argc, char* argv[], string& type, string& file_path,
 				break;
 			case 'f':
 				file_path = string(optarg);
+				break;
+			case 'b':
+				if (string(optarg) == "true") {
+					passed_args["inv_blist"] = 1;
+				}
 				break;
 			case 'i':
 				passed_args["length_id"] = atoi(optarg);

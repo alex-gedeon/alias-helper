@@ -1,15 +1,15 @@
 #include <fstream>
 #include <iostream>
+#include <unordered_map>
 #include <vector>
 
 class Table {
    public:
-	// Expects an unformatted file path, and a formatted file output path.
-	// Other arguments are optional.
-	Table(std::string path_input_in, std::string path_output_in,
-		  std::string path_blacklist_in, int length_id_in = 3,
-		  int length_type_in = 10, int length_alias_in = 10,
-		  int length_desc_in = 40);
+	/* Expects an unformatted file path, and a formatted file output path.
+	Other arguments are optional, can be ["inv_blist"], ["length_id"],
+	["length_type"], ["length_alias"], and ["length_desc"] */
+	Table(const std::string &path_input_in, const std::string &path_output_in,
+		  const std::string &path_blacklist_in, std::unordered_map<std::string, int> &other_args);
 
 	// Main driver for Table class. Should be only public method.
 	void print();
@@ -46,13 +46,14 @@ class Table {
 	std::string path_input;
 	std::string path_output;
 	std::string path_blacklist;
-	int length_id;
-	int length_type;
-	int length_alias;
-	int length_desc;
+	int length_id = 3;
+	int length_type = 10;
+	int length_alias = 10;
+	int length_desc = 40;
 	std::ofstream fout;
 	std::ifstream fin;
 	std::ifstream blacklist_fin;
 	std::vector<Datum> data;
 	std::vector<int> blacklist;
+	bool invert_blacklist = false;
 };

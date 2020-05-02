@@ -4,20 +4,36 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
 
-Table::Table(string path_input_in, string path_output_in,
-			 string path_blacklist_in, int length_id_in,
-			 int length_type_in, int length_alias_in,
-			 int length_desc_in)
-	: path_input(path_input_in), path_output(path_output_in), path_blacklist(path_blacklist_in), length_id(length_id_in), length_type(length_type_in), length_alias(length_alias_in), length_desc(length_desc_in) {
+Table::Table(const string &path_input_in, const string &path_output_in,
+			 const string &path_blacklist_in, unordered_map<string, int> &other_args)
+	: path_input(path_input_in), path_output(path_output_in), path_blacklist(path_blacklist_in) {
 	// Opens unformatted file for input and formatted file for output.
 	// Also opens blacklisted file.
 	fin.open(path_input);
 	fout.open(path_output);
 	blacklist_fin.open(path_blacklist);
+
+	// Record other args, if they exist
+	if (other_args.find("inv_blist") != other_args.end()) {
+		invert_blacklist = true;
+	}
+	if (other_args.find("length_id") != other_args.end()) {
+		length_id = other_args["length_id"];
+	}
+	if (other_args.find("length_type") != other_args.end()) {
+		length_type = other_args["length_type"];
+	}
+	if (other_args.find("length_alias") != other_args.end()) {
+		length_alias = other_args["length_alias"];
+	}
+	if (other_args.find("length_desc") != other_args.end()) {
+		length_desc = other_args["length_desc"];
+	}
 }
 
 void Table::output_horizontal_line() {
@@ -103,7 +119,12 @@ void Table::print_header() {
 }
 
 bool Table::id_in_blacklist(int id) {
-	return find(blacklist.begin(), blacklist.end(), id) != blacklist.end();
+	if (find(blacklist.begin(), blacklist.end(), id) != blacklist.end()) {
+		// if its not in there, return false if inverting blacklist
+		return !invert_blacklist;
+	}
+	// if its in the blacklist, return true if inverting blacklist
+	return invert_blacklist;
 }
 
 void Table::print() {
