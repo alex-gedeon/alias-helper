@@ -20,7 +20,8 @@ Installation:
 
 Example usage (creates an alias for calling the alias manager script):
 
-```$ pwd
+``` none
+$ pwd
 /mnt/c/Projects/alias-helper
 $ ./bin/alias_manager.sh
 Alias Helper v. 1.0
