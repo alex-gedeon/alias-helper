@@ -20,10 +20,10 @@ Installation:
 
 Example usage (creates an alias for calling the alias manager script):
 
-`$ pwd`  
-`/mnt/c/Projects/alias-helper`  
-`$ ./bin/alias_manager.sh`  
-`Alias Helper v. 1.0`  
+```$ pwd
+/mnt/c/Projects/alias-helper
+$ ./bin/alias_manager.sh
+Alias Helper v. 1.0```
 
 `Enter command (enter h for help):`  
 `$ c`  
@@ -52,7 +52,7 @@ Example usage (creates an alias for calling the alias manager script):
 `Alias Helper v. 1.0` (now you can call the manager from anywhere!)  
 
 `Enter command (enter h for help):`  
-`$ q`  
+$ q
 
 Current functionality:
 
