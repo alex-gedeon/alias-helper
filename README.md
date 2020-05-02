@@ -9,13 +9,14 @@ After typing repetitive commands like `$ cd ..`, `$ cd ../..`, `$ explorer.exe .
 An alias is simply another name for something, where in this case it refers to another name for a complicated instruction. For example, it is quite tedious to have to constantly type a long command such as the following:  
 `$ cd /mnt/c/Projects/foo/bar/foo_bar/bar_foo/foo_bar_foo/target`  
 It would be much more convenient to just type a short alias instead, such as:  
-`$ example`  
-This can be done manually with `$ echo "alias example='{long command}'" >> ~/.bash_aliases`, or through editing ~/.bash_aliases in an editor like vim, but these methods make it hard to keep track of current and relevant aliases when, like me, you accumulate dozens of aliases and find that parsing through the output of `$ alias` is just too inefficient.
+`$ alproj`  
+This can be done manually with `$ echo "alias alproj='{long command}'" >> ~/.bash_aliases`, or through editing ~/.bash_aliases in an editor like vim, but these methods make it hard to keep track of current and relevant aliases when, like me, you accumulate dozens of aliases and find that parsing through the output of `$ alias` is just too inefficient.
 
 That's what this utility aims to solve. I intend to create a more user-friendly system to manage aliases, by assigning user-inputted tags to them through types and descriptions, and printing out an organized table which summarizes the aliases created to date.
 
 ### Installation
 
+- Clone the git repository
 - Install the utility with `$ make install` to create the necessary directory and compile the table printing executable.
 - Run the overall manager with `$ ./bin/alias_manager.sh`. May need to give the scripts permission first, such as with `$ chmod +x bin/*`
 - You can run the individual components, `view_aliases.sh` and `create_alias.sh` separately, and I'd recommend making aliases for all three scripts to get the most out of the utility.
@@ -58,7 +59,9 @@ Enter command (enter h for help):
 $ q
 ```
 
-Current functionality:
+### Features
+
+Current Functionality:
 
 - Command line parsing
 - Prints a table to display aliases
@@ -76,7 +79,7 @@ Future plans:
 
 - Remove aliases from blacklist (currently just manually delete ids from text file, where the id is the line (0 indexed) of the entry in /local/aliases_unformatted.txt)
 - Alias creation should fail if name has already been used, even if in blacklist
-- Allow user to create and view variables with similar functionality
+- Allow user to create and view variables with similar functionality, would allow for commands such as `cd ${PROJ_DIR}/...` instead of retyping entire path (aliases within aliases I suppose)
 - Allow user to modify previously inputted type and description, maybe with override.txt, id#new_type#new_description. This should work even if you change information twice, since the program can just use whatever is farther along in the file
 - Ability to change printed table size
 - Blacklist multiple aliases at once
