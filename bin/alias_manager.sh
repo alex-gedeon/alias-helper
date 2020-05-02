@@ -7,6 +7,9 @@ BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # Extracts the base directory from the /bin/ directory
 BASE_DIR=$(echo "$BIN_DIR" | sed 's,/*[^/]\+/*$,,')
 
+echo "Alias Helper v. 1.0"
+printf "\n"
+
 while true
 do
     echo "Enter command (enter h for help):"
@@ -29,6 +32,7 @@ do
             cat "$BASE_DIR/local/aliases_formatted.txt"
             ;;
         c)
+            printf "\n"
             "$BIN_DIR/create_alias.sh"
             ;;
         d)
