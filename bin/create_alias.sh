@@ -38,5 +38,5 @@ if [ "$alias_description" == "$compare" ]; then
 fi
 
 echo "$alias_type#$alias_name#$alias_description" >> "$BASE_DIR/local/aliases_unformatted.txt"
-# Following line should be commented until the program is basically done
-# echo "alias $alias_name=\"$alias_command\"" >> ~/.bash_aliases
+# Following line should be commented if you don't want ~/.bash_aliases to be modified when testing
+echo "alias $alias_name=\"$alias_command\"" >> ~/.bash_aliases
