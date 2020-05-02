@@ -23,36 +23,37 @@ Example usage (creates an alias for calling the alias manager script):
 ```$ pwd
 /mnt/c/Projects/alias-helper
 $ ./bin/alias_manager.sh
-Alias Helper v. 1.0```
+Alias Helper v. 1.0
 
-`Enter command (enter h for help):`  
-`$ c`  
+Enter command (enter h for help):
+$ c
 
-`---NEW ALIAS CREATION---`  
-`Enter q at any time to exit.`  
+---NEW ALIAS CREATION---
+Enter q at any time to exit.
 
-`Enter the alias type (must be one word):`  
-`This can be any string, like directory, online, program, etc.`  
-`$ program`  
+Enter the alias type (must be one word):
+This can be any string, like directory, online, program, etc.
+$ program
 
-`Enter the alias you wish to substitute the command for (must be one word)`  
-`$ alman`  
+Enter the alias you wish to substitute the command for (must be one word)
+$ alman
 
-`Enter the command to substitute (spaces allowed, format strings carefully)`  
-`$ /mnt/c/Projects/alias-helper/bin/alias_manager.sh`  
+Enter the command to substitute (spaces allowed, format strings carefully)
+$ /mnt/c/Projects/alias-helper/bin/alias_manager.sh
 
-`Enter a description for the alias (spaces allowed)`  
-`Open alias manager` (thus allowing the creation of aliases by aliases)  
+Enter a description for the alias (spaces allowed)
+Open alias manager` (thus allowing the creation of aliases by aliases)
 
-`Enter command (enter h for help):`  
-`$ q`  
-`$ exit` (restart terminal)  
-`$ cd ~` (to show aliases work anywhere)  
-`$ alman`  
-`Alias Helper v. 1.0` (now you can call the manager from anywhere!)  
-
-`Enter command (enter h for help):`  
+Enter command (enter h for help):
 $ q
+$ exit (restart terminal)
+$ cd ~ (to show aliases work anywhere)
+$ alman
+Alias Helper v. 1.0 (now you can call the manager from anywhere!)
+
+Enter command (enter h for help):
+$ q
+```
 
 Current functionality:
 
