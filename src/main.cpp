@@ -43,12 +43,13 @@ int main(int argc, char** argv) {
 	if (table_type == "alias") {
 		input_addition = "aliases_unformatted.txt";
 		output_addition = "aliases_formatted.txt";
+		blacklist_addition = "aliases_blacklist.txt";
 	} else {
 		input_addition = "variables_unformatted.txt";
 		output_addition = "variables_formatted.txt";
+		blacklist_addition = "variables_blacklist.txt";
 	}
-	blacklist_addition = "blacklist.txt";
-
+	
 	Table table(local_path + input_addition, local_path + output_addition,
 				local_path + blacklist_addition, passed_args);
 	table.print();
@@ -70,7 +71,7 @@ void parse_command_line(int argc, char* argv[], string& type, string& file_path,
 		{"length_desc", optional_argument, nullptr, 'd'},
 		{nullptr, 0, nullptr, '\0'}};
 
-	while ((choice = getopt_long(argc, argv, "ht:f:b:iyad", long_options, &option_index)) != -1) {
+	while ((choice = getopt_long(argc, argv, "ht:f:b:i:y:a:d:", long_options, &option_index)) != -1) {
 		switch (choice) {
 			case 'h':
 				cout << "usage: ./formatted [options]\n";

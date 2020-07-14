@@ -1,7 +1,7 @@
 install:
 	# Making /local/ folder and compiling /src/table_driver.exe.
 	@test -d $(LOCAL_DIR) || mkdir $(LOCAL_DIR)
-	@g++ src/main.cpp -lstdc++fs src/Table.cpp -o src/table_driver.exe
+	@g++ src/main.cpp -lstdc++fs -std=c++11 src/Table.cpp -o src/table_driver.exe
 
 mkfile_path=$(abspath $(lastword $(MAKEFILE_LIST)))
 LOCAL_DIR="$(PWD)/local/"
