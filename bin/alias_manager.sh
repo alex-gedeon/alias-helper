@@ -2,7 +2,10 @@
 # Main driver for the alias management system. Reads in user commands
 # to view, create, and delete aliases.
 
-# Gets /bin/ project directory with a sweet one-liner
+# Refresh aliases
+source ~/.bash_aliases
+
+# Gets /bin/ project directory
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # Extracts the base directory from the /bin/ directory
 BASE_DIR=$(echo "$BIN_DIR" | sed 's,/*[^/]\+/*$,,')
@@ -50,3 +53,6 @@ do
     esac
     printf "\n"
 done
+
+# Refresh aliases
+source ~/.bash_aliases

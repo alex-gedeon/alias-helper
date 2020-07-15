@@ -2,7 +2,10 @@
 # This script will handle the creation of a new alias by
 # adding the entry to the unformatted.txt file and to ~/.bash_aliases
 
-# Gets /bin/ project directory with a sweet one-liner
+# Refresh aliases
+source ~/.bash_aliases
+
+# Gets /bin/ project directory
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Extracts the base directory from the /bin/ directory
@@ -40,3 +43,6 @@ fi
 echo "$alias_type#$alias_name#$alias_description" >> "$BASE_DIR/local/aliases_unformatted.txt"
 # Following line should be commented if you don't want ~/.bash_aliases to be modified when testing
 echo "alias $alias_name=\"$alias_command\"" >> ~/.bash_aliases
+
+# Refresh aliases
+source ~/.bash_aliases

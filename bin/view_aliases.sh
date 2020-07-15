@@ -4,8 +4,11 @@
 # provided by the user previously, and then outputs the contents of the
 # formatted file to standard out.
 
-set -Eeuo pipefail
 # set -x
+set -Eeuo pipefail
+
+# Refresh aliases
+source ~/.bash_aliases
 
 # Gets /bin/ project directory with a sweet one-liner
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"

@@ -7,6 +7,9 @@
 set -Eeuo pipefail
 # set -x
 
+# Refresh aliases
+source ~/.bash_aliases
+
 # Gets /bin/ project directory with a sweet one-liner
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
