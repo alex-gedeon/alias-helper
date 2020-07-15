@@ -146,5 +146,6 @@ void Table::print() {
 								datum.alias, datum.description);
 		}
 	}
+	print_header();
 	output_horizontal_line();
 }
