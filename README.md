@@ -1,4 +1,4 @@
-# alias-helper
+# alias-helper v 2.0
 
 ## Terminal based utility intended to streamline the usage of aliases: a fantastic way to optimize productivity
 
@@ -27,7 +27,7 @@ That's what this utility aims to solve. I intend to create a more user-friendly 
 $ pwd
 /mnt/c/Projects/alias-helper
 $ ./bin/alias_manager.sh
-Alias Helper v. 1.0
+Alias Helper v. 2.0
 
 Enter command (enter h for help):
 $ c
@@ -53,7 +53,7 @@ $ q
 $ exit                              # restart terminal
 $ cd ~                              # to show aliases work anywhere
 $ alman
-Alias Helper v. 1.0                 # now you can call the manager from anywhere!
+Alias Helper v. 2.0                 # now you can call the manager from anywhere!
 
 Enter command (enter h for help):
 $ q
@@ -84,3 +84,12 @@ Future plans:
 - Ability to change printed table size
 - Blacklist multiple aliases at once
 - Load in pre-existing aliases in ~/.bash_aliases and populate unformatted aliases and variables with user input
+- Create backup of aliases to local/folder
+- Store project in the proper unix folder location
+- Allow for environment aliases to be created easily (i.e. aliases that use a variable assigned at runtime, yet have a value during initialization)
+- Consolidating unecessary scripts
+- Transferring code to python most likely since it's much easier to maintain and develop in
+- Preparing for full release v 3
+- Allowing functions
+- Organization of ~/.bash_aliases itself
+- Cross platform support
