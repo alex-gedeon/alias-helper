@@ -10,7 +10,7 @@ set -Eeuo pipefail
 # Refresh aliases
 source ~/.bash_aliases
 
-# Gets /bin/ project directory with a sweet one-liner
+# Gets /bin/ project directory
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Extracts the base directory from the /bin/ directory
@@ -25,3 +25,6 @@ $FINAL_EXE -t alias -f $BASE_DIR
 
 # Prints output to terminal
 cat "$BASE_DIR/local/aliases_formatted.txt"
+
+#! Temporary
+echo "Add + to 'disc' command to try indev alias extension features"

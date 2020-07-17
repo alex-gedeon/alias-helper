@@ -93,3 +93,5 @@ Future plans:
 - Allowing functions
 - Organization of ~/.bash_aliases itself
 - Cross platform support
+- Allow for listing aliases of only specific types
+- Allow for general expansion characters, such as adding a '+' to commands to automatically include pulling from git, activating python environment, and opening vscode
