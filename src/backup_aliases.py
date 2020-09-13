@@ -9,7 +9,10 @@ if not os.path.exists(f'{base_path}/local/'):
     os.mkdir(f'{base_path}/local/')
 if not os.path.exists(f'{base_path}/local/backups/'):
     os.mkdir(f'{base_path}/local/backups/')
+if not os.path.exists(f'{base_path}/local/{timestamp}'):
+    os.mkdir(f'{base_path}/local/backups/{timestamp}')
 
-backup_path = base_path + '/local/backups/' + timestamp
+backup_path = base_path + f'/local/backups/{timestamp}'
 
-os.system(f'cat ~/.bash_aliases > {backup_path}')
+os.system(f'cat ~/.bash_aliases > {backup_path}/aliases')
+os.system(f'cat {base_path}/local/aliases_unformatted.txt > {backup_path}/unformatted')
