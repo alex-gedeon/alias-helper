@@ -5,3 +5,4 @@ historical/
 .vscode/
 local/
 bash_aliases_backups/
+env/
