@@ -1,1 +1,0 @@
-cat ~/.bash_aliases > temp.txt
