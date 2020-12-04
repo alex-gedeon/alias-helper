@@ -33,7 +33,7 @@ class Table {
 			if (type != other.type) {
 				return type < other.type;
 			}
-			return alias < other.type;
+			return alias < other.alias;
 		}
 
 		void print() {
