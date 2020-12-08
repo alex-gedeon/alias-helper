@@ -21,23 +21,29 @@ void parse_command_line(int argc, char** argv, unordered_map<string, int>& passe
     option long_options[] = {
         {"help", no_argument, nullptr, 'h'},
         {"list", no_argument, nullptr, 'l'},
-        {"import", required_argument, nullptr, 'i'},
         {"new", no_argument, nullptr, 'n'},
         {"type", required_argument, nullptr, 't'},
         {"alias", required_argument, nullptr, 'a'},
-        {"description", required_argument, nullptr, 'd'}
+        {"description", required_argument, nullptr, 'd'},
+        {"import", required_argument, nullptr, 'i'},
     };
 
-    while ((choice = getopt_long(argc, argv, "hli:nt:a:d:", long_options, &option_index)) != -1) {
+    while ((choice = getopt_long(argc, argv, "hlnt:a:d:i:", long_options, &option_index)) != -1) {
         switch (choice) {
             case 'h':
-                cout << "TODO: help menu\n";
+                cout << "alias helper, version 3.0.0\n"
+                    << "Homepage: https://github.com/alex-gedeon/alias-helper\n\n"
+                    << "Usage: alh [OPTIONS]\n"
+                    << "\t-h: Prints help menu\n"
+                    << "\t-l: Lists available aliases\n"
+                    << "\t-n: Creates a new alias. Requires -t and -d\n"
+                    << "\t-t: Specifies alias type\n"
+                    << "\t-a: Specifies alias shorcut\n"
+                    << "\t-d: Specifies alias description\n"
+                    << "\t-i: Imports aliases from a file\n";
                 exit(0);
             case 'l':
                 cout << "TODO: list\n";
-                exit(0);
-            case 'i':
-                cout << "TODO: import\n";
                 exit(0);
             case 'n':
                 cout << "TODO: new\n";
@@ -51,8 +57,11 @@ void parse_command_line(int argc, char** argv, unordered_map<string, int>& passe
             case 'd':
                 cout << "TODO: description\n";
                 exit(0);
+            case 'i':
+                cout << "TODO: import\n";
+                exit(0);
             default:
-				cerr << "Invalid option or input. Try with -h flag for help." << endl;
+				cerr << "Invalid option, or missing command line argument. Try with -h flag for help." << endl;
                 exit(1);
         }
     }
