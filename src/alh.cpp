@@ -51,6 +51,7 @@ class Driver {
                 table.print_horizontal_line();
                 return;
             }
+
             // Check n argument
             if(passed_args.find('n') != passed_args.end()) {
                 // Append new alias to file
@@ -68,6 +69,41 @@ class Driver {
                 outfile << "\n";
                 outfile.close();
                 return;
+            }
+
+            // Check u argument
+            if(passed_args.find('u') != passed_args.end()) {
+                // Read in aliases, error check idx
+                read_in_aliases();
+                if(data.size() < stoi(passed_args['i'])) {
+                    cout << "Error: invalid idx" << endl;
+                    exit(1);
+                }
+
+                // Two streams: reading and writing
+                string tmp_alias = alias_dir + ".tmp";
+                ifstream fin(alias_dir);
+                ofstream fout(tmp_alias);
+                
+                // Read in from one, dump to other
+                string line;
+                int idx = 0;
+                while(getline(fin, line)) {
+                    // If hit index, print alias and command, print type and description
+                    if(idx == stoi(passed_args['i'])) {
+                        for(int i = 0; i < data.size(); ++i) {
+                            if(data[i].id == stoi(passed_args['i'])) {
+                                fout << data[i] << "#" << passed_args['t'] << "#" << passed_args['d'] << endl;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        fout << line << endl;
+                    }
+                    ++idx;
+                }
+                rename(tmp_alias.c_str(), alias_dir.c_str());
             }
         }
 
@@ -135,6 +171,12 @@ class Driver {
                             << " alias: " << alias << " desc: "
                             << description << std::endl;
                 }
+
+                friend ostream& operator<<(ostream &out, Datum d) {
+                    boost::replace_all(d.command, "'", "'\\''");
+                    out << "alias " << d.alias << "='" << d.command << "'";
+                    return out;
+                }
             };
         vector<Datum> data;
         unordered_map<char, string> passed_args;
@@ -189,14 +231,10 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
         {"help", no_argument, nullptr, 'h'},
         {"list", no_argument, nullptr, 'l'},
         {"new", no_argument, nullptr, 'n'},
-        {"alias", required_argument, nullptr, 'a'},
-        {"command", required_argument, nullptr, 'c'},
-        {"type", required_argument, nullptr, 't'},
-        {"description", required_argument, nullptr, 'd'},
-        {"import", required_argument, nullptr, 'i'},
+        {"update", no_argument, nullptr, 'u'},
     };
 
-    while ((choice = getopt_long(argc, argv, "hlna:c:t:d:i:", long_options, &option_index)) != -1) {
+    while ((choice = getopt_long(argc, argv, "hlnu", long_options, &option_index)) != -1) {
         switch (choice) {
             case 'h':
                 print_help_menu();
@@ -204,8 +242,7 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
             case 'l':
                 passed_args['l'] = "true";
                 break;
-            case 'n':
-            {
+            case 'n': {
                 // Read in alias, command, type, and description
                 vector<string> inputs;
                 for(; optind < argc && *argv[optind] != '-'; ++optind) {
@@ -228,21 +265,26 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
                 passed_args['n'] = "true";
                 break;
             }
-            case 'a':
-                cout << "TODO: alias\n";
-                exit(0);
-            case 'c':
-                cout << "TODO: command\n";
-                exit(0);
-            case 't':
-                cout << "TODO: type\n";
-                exit(0);
-            case 'd':
-                cout << "TODO: description\n";
-                exit(0);
-            case 'i':
-                cout << "TODO: import\n";
-                exit(0);
+            case 'u': {
+                // Read in id, type, and description
+                vector<string> inputs;
+                for(; optind < argc && *argv[optind] != '-'; ++optind) {
+                    inputs.push_back(string(argv[optind]));
+                }
+
+                // Check args
+                if(inputs.size() != 3) {
+                    cout << "Usage: alh -u [ID] [new type] [new description]" << endl;
+                    exit(1);
+                }
+
+                // Store args
+                passed_args['i'] = inputs[0];
+                passed_args['t'] = inputs[1];
+                passed_args['d'] = inputs[2];
+                passed_args['u'] = "true";
+                break;
+            }
             default:
 				cerr << "Invalid option, or missing command line argument. Try with -h flag for help." << endl;
                 exit(1);

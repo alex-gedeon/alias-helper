@@ -11,11 +11,7 @@ void print_help_menu() {
                     << "\t-h: Prints help menu\n"
                     << "\t-l: Lists available aliases\n"
                     << "\t-n: Creates a new alias. Requires 2-4 arguments, run blank for help\n"
-                    << "\t-a: Specifies alias shorcut\n"
-                    << "\t-c: Specifies alias command\n"
-                    << "\t-t: Specifies alias type\n"
-                    << "\t-d: Specifies alias description\n"
-                    << "\t-i: Imports aliases from a file\n";
+                    << "\t-u: Update alias type and description. Requires 2 arguments\n";
 }
 
 void split_line_by_delimiter(const string &str, std::vector<string> &pieces, char delimiter) {
