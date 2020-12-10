@@ -23,6 +23,9 @@ class Driver {
         void run() {
             if(passed_args.find('l') != passed_args.end()) {
                 read_in_aliases();
+                for(int i = 0; i < data.size(); ++i) {
+                    cout << data[i] << endl;
+                }
             }
         }
 
