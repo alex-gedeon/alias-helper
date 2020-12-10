@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -21,55 +22,75 @@ class Driver {
 
         void run() {
             if(passed_args.find('l') != passed_args.end()) {
-                string line;
-                ifstream alias_filestream(alias_dir);
-                while(getline(alias_filestream, line)) {
-                    // Properly formatted line:
-                    // alias temp='echo "hello world!"'#{type}#{description}
-
-                    cout << line << endl;
-                    // Split by space first to extract alias
-                    int first_space = line.find(' ');
-                    int first_equals = line.find('=');
-                    int first_hash = line.find('#');
-                    string extracted_alias = line.substr(first_space+1, first_equals-first_space-1);
-
-                    string extracted_command;
-                    if(first_hash != -1) {
-                        extracted_command = line.substr(first_equals+2, first_hash-first_equals-3);
-                    }
-                    else {
-                        extracted_command = line.substr(first_equals+2, line.size() - first_equals-3);
-                    }
-                    cout << extracted_alias << " " << extracted_command << endl;
-                }
+                read_in_aliases();
             }
         }
 
     private:
+        void read_in_aliases() {
+            string line;
+            ifstream alias_filestream(alias_dir);
+            int id = 0;
+            while(getline(alias_filestream, line)) {
+                // Properly formatted line:
+                // alias temp='echo "hello world!"'#{type}#{description}
+
+                // cout << line << endl;
+                // Split by space first to extract alias
+                int first_space = line.find(' ');
+                int first_equals = line.find('=');
+                int first_hash = line.find('#');
+                string extracted_alias = line.substr(first_space+1, first_equals-first_space-1);
+
+                string extracted_command;
+                if(first_hash != -1) {
+                    extracted_command = line.substr(first_equals+2, first_hash-first_equals-3);
+                }
+                else {
+                    extracted_command = line.substr(first_equals+2, line.size() - first_equals-3);
+                }
+
+                // Extract type and description
+                vector<string> tokens;
+                split_line_by_delimiter(line, tokens, '#');
+                string extracted_type, extracted_description;
+                if(tokens.size() == 3) {
+                    extracted_type = tokens[1];
+                    extracted_description = tokens[2];
+                }
+                // cout << extracted_alias << " | " << extracted_command << " | " << extracted_type << " | " << extracted_description << endl;
+
+                // Append to data vector
+                data.push_back(Datum{id, extracted_alias, extracted_command, extracted_type, extracted_description});
+
+                id += 1;
+            }
+            sort(data.begin(), data.end());
+        }
+        struct Datum {
+                int id;
+                std::string alias;
+                std::string command;
+                std::string type;
+                std::string description;
+
+                bool operator<(Datum &other) {
+                    if (type != other.type) {
+                        return type < other.type;
+                    }
+                    return alias < other.alias;
+                }
+
+                void print() {
+                    std::cout << "id: " << id << " type: " << type
+                            << " alias: " << alias << " desc: "
+                            << description << std::endl;
+                }
+            };
+        vector<Datum> data;
         unordered_map<char, string> passed_args;
         string alias_dir;
 
-        struct Datum {
-            int id;
-            std::string alias;
-            std::string command;
-            std::string type;
-            std::string description;
-
-            bool operator<(Datum &other) {
-                if (type != other.type) {
-                    return type < other.type;
-                }
-                return alias < other.alias;
-            }
-
-            void print() {
-                std::cout << "id: " << id << " type: " << type
-                        << " alias: " << alias << " desc: "
-                        << description << std::endl;
-            }
-        };
 };
 
 void parse_command_line(int argc, char** argv, unordered_map<char, string>& passed_args);
