@@ -61,7 +61,7 @@ class Driver {
                 boost::replace_all(passed_args['c'], "'", "'\\''");
                 outfile << "alias " << passed_args['a'] << "='" << passed_args['c'] << "'";
                 if(passed_args.find('t') != passed_args.end()) {
-                    outfile << "#" << passed_args['t'];
+                    outfile << " #" << passed_args['t'];
                     if(passed_args.find('d') != passed_args.end()) {
                         outfile << "#" << passed_args['d'];
                     }
@@ -93,7 +93,7 @@ class Driver {
                     if(idx == stoi(passed_args['i'])) {
                         for(int i = 0; i < data.size(); ++i) {
                             if(data[i].id == stoi(passed_args['i'])) {
-                                fout << data[i] << "#" << passed_args['t'] << "#" << passed_args['d'] << endl;
+                                fout << data[i] << " #" << passed_args['t'] << "#" << passed_args['d'] << endl;
                                 break;
                             }
                         }
