@@ -24,8 +24,24 @@ class Driver {
             if(passed_args.find('l') != passed_args.end()) {
                 read_in_aliases();
                 for(int i = 0; i < data.size(); ++i) {
-                    cout << data[i] << endl;
+                    data[i].print();
                 }
+                vector<int> lengths = {length_id, length_type, length_alias, length_description};
+                print_header(lengths);
+
+                string curr_type = "\n";
+                for(auto datum : data) {
+                    if (curr_type != datum.type) {
+                        output_horizontal_line(lengths);
+                        curr_type = datum.type;
+                        print_interior_line(to_string(datum.id), datum.type, datum.alias, datum.description, lengths);
+                    }
+                    else {
+                        print_interior_line(to_string(datum.id), "", datum.alias, datum.description, lengths);
+                    }
+                }
+                print_header(lengths);
+                output_horizontal_line(lengths);
             }
         }
 
@@ -70,6 +86,7 @@ class Driver {
             }
             sort(data.begin(), data.end());
         }
+        
         struct Datum {
                 int id;
                 std::string alias;
@@ -93,6 +110,11 @@ class Driver {
         vector<Datum> data;
         unordered_map<char, string> passed_args;
         string alias_dir;
+        int length_id = 3;
+        int length_command = 20;
+        int length_alias = 10;
+        int length_type = 10;
+        int length_description = 50;
 
 };
 
