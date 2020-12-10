@@ -1,4 +1,4 @@
-# alias-helper v 3.0
+# alias-helper v3.0
 
 ## Terminal based utility intended to streamline the usage of aliases
 
