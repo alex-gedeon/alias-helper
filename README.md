@@ -1,6 +1,6 @@
-# alias-helper v 2.0
+# alias-helper v 3.0
 
-## Terminal based utility intended to streamline the usage of aliases: a fantastic way to optimize productivity
+## Terminal based utility intended to streamline the usage of aliases
 
 After typing repetitive commands like `$ cd ..`, `$ cd ../..`, `$ explorer.exe .`, and spending cumulative hours typing long `$ cd /mnt/c/Projects/.....` commands to get to my working directories, I decided to make this utility to make repetitive commands much more manageable through aliases.
 
@@ -9,89 +9,119 @@ After typing repetitive commands like `$ cd ..`, `$ cd ../..`, `$ explorer.exe .
 An alias is simply another name for something, where in this case it refers to another name for a complicated instruction. For example, it is quite tedious to have to constantly type a long command such as the following:  
 `$ cd /mnt/c/Projects/foo/bar/foo_bar/bar_foo/foo_bar_foo/target`  
 It would be much more convenient to just type a short alias instead, such as:  
-`$ alproj`  
-This can be done manually with `$ echo "alias alproj='{long command}'" >> ~/.bash_aliases`, or through editing ~/.bash_aliases in an editor like vim, but these methods make it hard to keep track of current and relevant aliases when, like me, you accumulate dozens of aliases and find that parsing through the output of `$ alias` is just too inefficient.
+`$ tdir`  
+This can be done manually with `$ echo "alias tdir='{long command}'" >> ~/.bash_aliases`, or through editing `~/.bash_aliases` in an editor like vim, but these methods make it hard to keep track of current and relevant aliases when, like me, you accumulate dozens of aliases and find that parsing through the output of `$ alias` is just too inefficient.
 
 That's what this utility aims to solve. I intend to create a more user-friendly system to manage aliases, by assigning user-inputted tags to them through types and descriptions, and printing out an organized table which summarizes the aliases created to date.
 
 ### Installation
 
-- Clone the git repository
-- Install the utility with `$ make install` to create the necessary directory and compile the table printing executable.
-- Run the overall manager with `$ ./bin/alias_manager.sh`. May need to give the scripts permission first, such as with `$ chmod +x bin/*`
-- You can run the individual components, `view_aliases.sh` and `create_alias.sh` separately, and I'd recommend making aliases for all three scripts to get the most out of the utility.
+- Clone the git repository with `$ git clone https://github.com/alex-gedeon/alias-helper.git`
+- Compile and install the utility with `$ sudo make`
+- Test the output of `$ alh`
 
-### Example usage (creates an alias for calling the alias manager script)
+### Example usages
+
+#### Help menu
+
+The help menu can be accessed with the `-h` flag, run as `$ alh -h` for an output of:
 
 ``` none
-$ pwd
-/mnt/c/Projects/alias-helper
-$ ./bin/alias_manager.sh
-Alias Helper v. 2.0
+$ alh -h
+alias helper, version 3.0
+Homepage: https://github.com/alex-gedeon/alias-helper
 
-Enter command (enter h for help):
-$ c
+Usage: alh [OPTIONS]
+        -h: Prints help menu
+        -l: Lists available aliases
+        -n: Creates a new alias. Requires 2-4 arguments
+        -u: Update alias type and description. Requires 2 arguments
+```
 
----NEW ALIAS CREATION---
-Enter q at any time to exit.
+#### Listing aliases
 
-Enter the alias type (must be one word):
-This can be any string, like directory, online, program, etc.
-$ program
+Listing aliases in a formatted table can be done simply with `$ alh`, or `$alh -l`. Attributes that do not fit into the column of a table are cut off, with the last fitting character replaced with a `#`.
 
-Enter the alias you wish to substitute the command for (must be one word)
-$ alman
+``` none
++-----+------------+------------+----------------------------------------------------+
+| ID  | Type       | Alias      | Description                                        |
++-----+------------+------------+----------------------------------------------------+
+| 2   |            | ..         |                                                    |
+| 3   |            | ...        |                                                    |
+| 4   |            | ....       |                                                    |
+| 5   |            | .....      |                                                    |
++-----+------------+------------+----------------------------------------------------+
+| 25  | dir        | 388        | 388 Directory                                      |
+| 16  |            | alex       | Windows home dir                                   |
+| 23  |            | chirp      | Chirp dir                                          |
+| 24  |            | mseed      | Minecraft seed project dir                         |
+| 14  |            | projs      | Projects dir                                       |
+| 22  |            | school     | School dir                                         |
+| 15  |            | squirl     | Squirl dir                                         |
++-----+------------+------------+----------------------------------------------------+
+| 7   | git        | ga         | Stage all files                                    |
+| 8   |            | gc         | git commit -m                                      |
+| 21  |            | gcm        | Checkout master                                    |
+| 10  |            | gpl        | git pull                                           |
+| 9   |            | gpu        | git push                                           |
+| 6   |            | gs         | git status                                         |
++-----+------------+------------+----------------------------------------------------+
+| 19  | online     | drive      | Opens Google Drive in Chrome                       |
++-----+------------+------------+----------------------------------------------------+
+| 18  | program    | chrome     | Opens chrome.exe                                   |
++-----+------------+------------+----------------------------------------------------+
+| 11  | python     | act        | Activate venv                                      |
+| 12  |            | deac       | Deactivates venv                                   |
+| 13  |            | pyenv      | Create a venv, expects version                     |
+| 20  |            | pyswitch   | Switches default python3 version                   |
++-----+------------+------------+----------------------------------------------------+
+| 1   | util       | cbal       | Edit aliases in vscode                             |
+| 17  |            | expl       | Opens explorer in .                                |
+| 0   |            | rel        | Reloads aliases                                    |
++-----+------------+------------+----------------------------------------------------+
+| ID  | Type       | Alias      | Description                                        |
++-----+------------+------------+----------------------------------------------------+
+```
 
-Enter the command to substitute (spaces allowed, format strings carefully)
-$ /mnt/c/Projects/alias-helper/bin/alias_manager.sh
+#### Creating an alias
 
-Enter a description for the alias (spaces allowed)
-Open alias manager                  # thus allowing the creation of aliases by aliases
+Creating an alias is done through the `-n` flag, and expects two to four arguments for the alias itself, the command it replaces, and optionally the alias's type and description. This can be seen by typing `$ alh -n`, yielding the output of:
 
-Enter command (enter h for help):
-$ q
-$ exit                              # restart terminal
-$ cd ~                              # to show aliases work anywhere
-$ alman
-Alias Helper v. 2.0                 # now you can call the manager from anywhere!
+``` none
+$ alh -n
+Usage: alh -n [alias] [command] {type} {description}
+```
 
-Enter command (enter h for help):
-$ q
+#### Updating an alias
+
+If the type and description of an alias is not given at creation, such as if a previous `~/.bash_aliases` file had aliases created externally, they can be updated with the `-u` flag. This option requires the ID of the alias to fix, given through the table in `-l`, along with the new type and description for it. This can be seen by typing `$alh -u`, yielding the output of:
+
+``` none
+$ alh -u
+Usage: alh -u [ID] [new type] [new description]
 ```
 
 ### Features
 
 Current Functionality:
 
-- Command line parsing
-- Prints a table to display aliases
-- Create aliases locally (in ~/.bash_aliases file)
-- Installation script
-- Remove displayed aliases with blacklist
-- View blacklist
+- Command line parsing for h, l, n, and u flags.
+- Create, parse, and update aliases locally (in ~/.bash_aliases file)
 
 In development:
 
-- Documentation
-- Taking a break
+- Blacklist aliases from appearing in list menu, have a special -l -b option for viewing blacklisted aliases
+- Make sure commented lines are ignored
 
 Future plans:
 
-- Remove aliases from blacklist (currently just manually delete ids from text file, where the id is the line (0 indexed) of the entry in /local/aliases_unformatted.txt)
-- Alias creation should fail if name has already been used, even if in blacklist
+- Alias creation should fail if name has already been used
 - Allow user to create and view variables with similar functionality, would allow for commands such as `cd ${PROJ_DIR}/...` instead of retyping entire path (aliases within aliases I suppose)
-- Allow user to modify previously inputted type and description, maybe with override.txt, id#new_type#new_description. This should work even if you change information twice, since the program can just use whatever is farther along in the file
-- Ability to change printed table size
+- Ability to change printed table size in config file
 - Blacklist multiple aliases at once
-- Load in pre-existing aliases in ~/.bash_aliases and populate unformatted aliases and variables with user input
-- Create backup of aliases to local/folder
-- Store project in the proper unix folder location
+- Alias backup system
 - Allow for environment aliases to be created easily (i.e. aliases that use a variable assigned at runtime, yet have a value during initialization)
-- Consolidating unecessary scripts
-- Transferring code to python most likely since it's much easier to maintain and develop in
-- Preparing for full release v 3
-- Allowing functions
-- Organization of ~/.bash_aliases itself
+- Allowing for functions
 - Cross platform support
 - Allow for listing aliases of only specific types
 - Allow for general expansion characters, such as adding a '+' to commands to automatically include pulling from git, activating python environment, and opening vscode

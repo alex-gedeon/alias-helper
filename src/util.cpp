@@ -5,12 +5,12 @@ using namespace std;
 
 
 void print_help_menu() {
-    cout << "alias helper, version 3.0.0\n"
+    cout << "alias helper, version 3.0\n"
                     << "Homepage: https://github.com/alex-gedeon/alias-helper\n\n"
                     << "Usage: alh [OPTIONS]\n"
                     << "\t-h: Prints help menu\n"
                     << "\t-l: Lists available aliases\n"
-                    << "\t-n: Creates a new alias. Requires 2-4 arguments, run blank for help\n"
+                    << "\t-n: Creates a new alias. Requires 2-4 arguments\n"
                     << "\t-u: Update alias type and description. Requires 2 arguments\n";
 }
 
