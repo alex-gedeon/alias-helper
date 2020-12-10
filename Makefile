@@ -23,4 +23,3 @@ clean:
 full_install:
 	@g++ src/alh.cpp -lstdc++fs -std=c++11 -o src/alh
 	@cp src/alh /usr/local/bin/
-	@test -d /usr/local/etc/alh || mkdir /usr/local/etc/alh
