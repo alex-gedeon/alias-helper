@@ -12,6 +12,25 @@
 
 using namespace std;
 
+class Driver {
+    public:
+        Driver(unordered_map<char, string>& passed_args_in, string alias_dir_in)
+            : passed_args(passed_args_in), alias_dir(alias_dir_in) {}
+
+        void run() {
+            if(passed_args.find('l') != passed_args.end()) {
+                string line;
+                ifstream alias_filestream(alias_dir);
+                while(getline(alias_filestream, line)) {
+                    cout << line << endl;
+                }
+            }
+        }
+    private:
+        unordered_map<char, string> passed_args;
+        string alias_dir;
+};
+
 void parse_command_line(int argc, char** argv, unordered_map<char, string>& passed_args);
 
 void print_help_menu();
@@ -22,7 +41,7 @@ int main(int argc, char** argv) {
         print_help_menu();
         exit(0);
     }
-    
+
     // Read in command line arguments
     unordered_map<char, string> passed_args;
     parse_command_line(argc, argv, passed_args);
@@ -35,20 +54,16 @@ int main(int argc, char** argv) {
     }
     string alias_dir = string(homedir) + "/.bash_aliases";
 
-
-    if (passed_args['l'] != "") {
-        ifstream f(alias_dir);
-        if (!f.good()) {
-            cout << "Error: no alias file\n";
-            exit(1);
-        }
-
-        string line;
-        while(getline(f, line)) {
-            cout << line << endl;
-        }
-        
+    ifstream f(alias_dir);
+    if (!f.good()) {
+        cout << "Error: no alias file\n";
+        exit(1);
     }
+    f.close();
+
+    // Create driver object, run processing of aliases
+    Driver driver(passed_args, alias_dir);
+    driver.run();
 }
 
 void parse_command_line(int argc, char** argv, unordered_map<char, string>& passed_args) {
