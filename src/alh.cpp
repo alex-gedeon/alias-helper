@@ -12,6 +12,7 @@
 #include <pwd.h>
 
 #include "util.h"
+#include "Table.h"
 
 using namespace std;
 
@@ -23,25 +24,29 @@ class Driver {
         void run() {
             if(passed_args.find('l') != passed_args.end()) {
                 read_in_aliases();
-                for(int i = 0; i < data.size(); ++i) {
-                    data[i].print();
-                }
+                // for(int i = 0; i < data.size(); ++i) {
+                //     data[i].print();
+                // }
+
                 vector<int> lengths = {length_id, length_type, length_alias, length_description};
-                print_header(lengths);
+                Table table(lengths);
+                table.print_horizontal_line();
+                table.print_header();
 
                 string curr_type = "\n";
                 for(auto datum : data) {
                     if (curr_type != datum.type) {
-                        output_horizontal_line(lengths);
+                        table.print_horizontal_line();
                         curr_type = datum.type;
-                        print_interior_line(to_string(datum.id), datum.type, datum.alias, datum.description, lengths);
+                        table.print_interior_line(to_string(datum.id), datum.type, datum.alias, datum.description);
                     }
                     else {
-                        print_interior_line(to_string(datum.id), "", datum.alias, datum.description, lengths);
+                        table.print_interior_line(to_string(datum.id), "", datum.alias, datum.description);
                     }
                 }
-                print_header(lengths);
-                output_horizontal_line(lengths);
+                table.print_horizontal_line();
+                table.print_header();
+                table.print_horizontal_line();
             }
         }
 
@@ -98,7 +103,10 @@ class Driver {
                     if (type != other.type) {
                         return type < other.type;
                     }
-                    return alias < other.alias;
+                    else if (alias != other.alias) {
+                        return alias < other.alias;
+                    }
+                    return id < other.id;
                 }
 
                 void print() {
