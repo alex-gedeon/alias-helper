@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
+#include <boost/algorithm/string.hpp>
 
 #include "util.h"
 #include "Table.h"
@@ -22,6 +23,7 @@ class Driver {
             : passed_args(passed_args_in), alias_dir(alias_dir_in) {}
 
         void run() {
+            // Check l argument
             if(passed_args.find('l') != passed_args.end()) {
                 read_in_aliases();
                 // for(int i = 0; i < data.size(); ++i) {
@@ -47,6 +49,25 @@ class Driver {
                 table.print_horizontal_line();
                 table.print_header();
                 table.print_horizontal_line();
+                return;
+            }
+            // Check n argument
+            if(passed_args.find('n') != passed_args.end()) {
+                // Append new alias to file
+                ofstream outfile(alias_dir, ios_base::app);
+
+                // Escape quotes if exist
+                boost::replace_all(passed_args['c'], "'", "'\\''");
+                outfile << "alias " << passed_args['a'] << "='" << passed_args['c'] << "'";
+                if(passed_args.find('t') != passed_args.end()) {
+                    outfile << "#" << passed_args['t'];
+                    if(passed_args.find('d') != passed_args.end()) {
+                        outfile << "#" << passed_args['d'];
+                    }
+                }
+                outfile << "\n";
+                outfile.close();
+                return;
             }
         }
 
@@ -184,8 +205,29 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
                 passed_args['l'] = "true";
                 break;
             case 'n':
-                cout << "TODO: new\n";
-                exit(0);
+            {
+                // Read in alias, command, type, and description
+                vector<string> inputs;
+                for(; optind < argc && *argv[optind] != '-'; ++optind) {
+                    inputs.push_back(string(argv[optind]));
+                }
+
+                // Check args
+                if(inputs.size() < 2 || inputs.size() > 4) {
+                    cout << "Usage: alh -n [alias] [command] {type} {description}" << endl;
+                    exit(1);
+                }
+                passed_args['a'] = inputs[0];
+                passed_args['c'] = inputs[1];
+                if(inputs.size() > 2) {
+                    passed_args['t'] = inputs[2];
+                    if(inputs.size() == 4) {
+                        passed_args['d'] = inputs[3];
+                    }
+                }
+                passed_args['n'] = "true";
+                break;
+            }
             case 'a':
                 cout << "TODO: alias\n";
                 exit(0);
