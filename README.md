@@ -18,7 +18,7 @@ That's what this utility aims to solve. I intend to create a more user-friendly 
 
 - Clone the git repository with `$ git clone https://github.com/alex-gedeon/alias-helper.git`
 - Compile and install the utility with `$ sudo make`
-- Test the output of `$ alh`
+- Test the output of `$ alh`, make sure you create a `~/.bash_aliases` file.
 
 ### Example usages
 
@@ -32,26 +32,23 @@ alias helper, version 3.0
 Homepage: https://github.com/alex-gedeon/alias-helper
 
 Usage: alh [OPTIONS]
-        -h: Prints help menu
-        -l: Lists available aliases
-        -n: Creates a new alias. Requires 2-4 arguments
+        -h: Print help menu
+        -l: List non-blacklisted aliases
+        -n: Create a new alias. Requires 2, 4, or 5 arguments
         -u: Update alias type and description. Requires 2 arguments
+        -b: Show blacklist, or toggle an alias with a given ID
 ```
 
 #### Listing aliases
 
-Listing aliases in a formatted table can be done simply with `$ alh`, or `$alh -l`. Attributes that do not fit into the column of a table are cut off, with the last fitting character replaced with a `#`.
+Listing non-blacklisted aliases in a formatted table can be done simply with `$ alh`, or `$alh -l`, where blacklisted aliases can be shown with `$ alh -b`. Attributes that do not fit into the column of a table are cut off, with the last fitting character replaced with a `#`.
 
 ``` none
+$ alh
 +-----+------------+------------+----------------------------------------------------+
 | ID  | Type       | Alias      | Description                                        |
 +-----+------------+------------+----------------------------------------------------+
-| 2   |            | ..         |                                                    |
-| 3   |            | ...        |                                                    |
-| 4   |            | ....       |                                                    |
-| 5   |            | .....      |                                                    |
-+-----+------------+------------+----------------------------------------------------+
-| 25  | dir        | 388        | 388 Directory                                      |
+| 25  | dir        | 388        | 388 dir                                            |
 | 16  |            | alex       | Windows home dir                                   |
 | 23  |            | chirp      | Chirp dir                                          |
 | 24  |            | mseed      | Minecraft seed project dir                         |
@@ -81,6 +78,17 @@ Listing aliases in a formatted table can be done simply with `$ alh`, or `$alh -
 +-----+------------+------------+----------------------------------------------------+
 | ID  | Type       | Alias      | Description                                        |
 +-----+------------+------------+----------------------------------------------------+
+$ alh -b
++-----+------------+------------+----------------------------------------------------+
+| ID  | Type       | Alias      | Description                                        |
++-----+------------+------------+----------------------------------------------------+
+| 2   | util       | ..         | Go up a level                                      |
+| 3   |            | ...        | Go up 2 levels                                     |
+| 4   |            | ....       | Go up 3 levels                                     |
+| 5   |            | .....      | Go up 4 levels                                     |
++-----+------------+------------+----------------------------------------------------+
+| ID  | Type       | Alias      | Description                                        |
++-----+------------+------------+----------------------------------------------------+
 ```
 
 #### Creating an alias
@@ -101,16 +109,20 @@ $ alh -u
 Usage: alh -u [ID] [new type] [new description]
 ```
 
+#### Blacklisting an alias
+
+Removing an alias from the regular output of `$alh -l` can be done through the `-b` flag. This option takes in either zero arguments, whereupon it prints all blacklisted aliases, or one argument in the form of the target alias's ID.
+
 ### Features
 
 Current Functionality:
 
 - Command line parsing for h, l, n, and u flags.
 - Create, parse, and update aliases locally (in ~/.bash_aliases file)
+- Blacklist aliases from appearing in list menu, run -b with no arguments for blacklist
 
 In development:
 
-- Blacklist aliases from appearing in list menu, have a special -l -b option for viewing blacklisted aliases
 - Make sure commented lines are ignored
 
 Future plans:

@@ -25,39 +25,7 @@ class Driver {
         void run() {
             // Check l argument
             if(passed_args.find('l') != passed_args.end()) {
-                read_in_aliases();
-                // for(int i = 0; i < data.size(); ++i) {
-                //     data[i].print();
-                // }
-
-                vector<int> lengths = {length_id, length_type, length_alias, length_description};
-                Table table(lengths);
-                table.print_horizontal_line();
-                table.print_header();
-
-                string curr_type = "\n";
-                for(auto datum : data) {
-                    // Continue if both blacklisting and not blacklisted or inverse
-                    if(passed_args.find('b') == passed_args.end() && datum.is_blacklisted) {
-                        continue;
-                    }
-                    else if (passed_args.find('b') != passed_args.end() && !datum.is_blacklisted) {
-                        continue;
-                    }
-
-                    if (curr_type != datum.type) {
-                        table.print_horizontal_line();
-                        curr_type = datum.type;
-                        table.print_interior_line(to_string(datum.id), datum.type, datum.alias, datum.description);
-                    }
-                    else {
-                        table.print_interior_line(to_string(datum.id), "", datum.alias, datum.description);
-                    }
-                }
-                table.print_horizontal_line();
-                table.print_header();
-                table.print_horizontal_line();
-                return;
+                print_aliases(false);
             }
 
             // Check n argument
@@ -92,8 +60,8 @@ class Driver {
             // Check b argument
             if(passed_args.find('b') != passed_args.end()) {
                 if(passed_args['b'] == "false") {
-                    cout << "Error: no ID given" << endl;
-                    exit(0);
+                    print_aliases(true);
+                    return;
                 }
                 update_line_in_file(stoi(passed_args['b']), "", "", true);
                 return;
@@ -101,6 +69,35 @@ class Driver {
         }
 
     private:
+        void print_aliases(bool blacklist) {
+            read_in_aliases();
+
+            vector<int> lengths = {length_id, length_type, length_alias, length_description};
+            Table table(lengths);
+            table.print_horizontal_line();
+            table.print_header();
+
+            string curr_type = "\n";
+            for(auto datum : data) {
+                // If blacklist, skip non-blacklisted; if !blacklist, skip blacklisted
+                if((blacklist && !datum.is_blacklisted) || (!blacklist && datum.is_blacklisted)) {
+                    continue;
+                }
+
+                if (curr_type != datum.type) {
+                    table.print_horizontal_line();
+                    curr_type = datum.type;
+                    table.print_interior_line(to_string(datum.id), datum.type, datum.alias, datum.description);
+                }
+                else {
+                    table.print_interior_line(to_string(datum.id), "", datum.alias, datum.description);
+                }
+            }
+            table.print_horizontal_line();
+            table.print_header();
+            table.print_horizontal_line();
+        }
+
         void update_line_in_file(int id_to_update, string new_type, string new_desc, bool flip_blacklist) {
             // Read in aliases, error check idx
             read_in_aliases();

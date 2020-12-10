@@ -8,11 +8,11 @@ void print_help_menu() {
     cout << "alias helper, version 3.0\n"
                     << "Homepage: https://github.com/alex-gedeon/alias-helper\n\n"
                     << "Usage: alh [OPTIONS]\n"
-                    << "\t-h: Prints help menu\n"
-                    << "\t-l: Lists available aliases, combine with -b to print blacklisted aliases\n"
-                    << "\t-n: Creates a new alias. Requires 2, 4, or 5 arguments\n"
+                    << "\t-h: Print help menu\n"
+                    << "\t-l: List non-blacklisted aliases\n"
+                    << "\t-n: Create a new alias. Requires 2, 4, or 5 arguments\n"
                     << "\t-u: Update alias type and description. Requires 2 arguments\n"
-                    << "\t-b: Blacklist an alias with a given ID\n";
+                    << "\t-b: Show blacklist, or toggle an alias with a given ID\n";
 }
 
 void split_line_by_delimiter(const string &str, std::vector<string> &pieces, char delimiter) {
