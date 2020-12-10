@@ -37,6 +37,9 @@ class Driver {
 
                 string curr_type = "\n";
                 for(auto datum : data) {
+                    if(datum.is_blacklisted) {
+                        continue;
+                    }
                     if (curr_type != datum.type) {
                         table.print_horizontal_line();
                         curr_type = datum.type;
@@ -62,8 +65,12 @@ class Driver {
                 outfile << "alias " << passed_args['a'] << "='" << passed_args['c'] << "'";
                 if(passed_args.find('t') != passed_args.end()) {
                     outfile << " #" << passed_args['t'];
-                    if(passed_args.find('d') != passed_args.end()) {
-                        outfile << "#" << passed_args['d'];
+                    outfile << "#" << passed_args['d'];
+                    if(passed_args.find('b') != passed_args.end()) {
+                        outfile << "#Y";
+                    }
+                    else {
+                        outfile << "#N";
                     }
                 }
                 outfile << "\n";
@@ -93,7 +100,14 @@ class Driver {
                     if(idx == stoi(passed_args['i'])) {
                         for(int i = 0; i < data.size(); ++i) {
                             if(data[i].id == stoi(passed_args['i'])) {
-                                fout << data[i] << " #" << passed_args['t'] << "#" << passed_args['d'] << endl;
+                                fout << data[i] << " #" << passed_args['t'] << "#" << passed_args['d'] << "#";
+                                if(data[i].is_blacklisted) {
+                                    fout << "Y";
+                                }
+                                else {
+                                    fout << "N";
+                                }
+                                fout << endl;
                                 break;
                             }
                         }
@@ -104,6 +118,13 @@ class Driver {
                     ++idx;
                 }
                 rename(tmp_alias.c_str(), alias_dir.c_str());
+                return;
+            }
+
+            // Check b argument
+            if(passed_args.find('b') != passed_args.end()) {
+                cout << "here" << endl;
+                exit(0);
             }
         }
 
@@ -125,7 +146,7 @@ class Driver {
 
                 string extracted_command;
                 if(first_hash != -1) {
-                    extracted_command = line.substr(first_equals+2, first_hash-first_equals-3);
+                    extracted_command = line.substr(first_equals+2, first_hash-1-first_equals-3);
                 }
                 else {
                     extracted_command = line.substr(first_equals+2, line.size() - first_equals-3);
@@ -135,14 +156,17 @@ class Driver {
                 vector<string> tokens;
                 split_line_by_delimiter(line, tokens, '#');
                 string extracted_type, extracted_description;
-                if(tokens.size() == 3) {
+                bool is_blacklisted = false;
+                if(tokens.size() > 2) {
                     extracted_type = tokens[1];
                     extracted_description = tokens[2];
+                    if(tokens.size() == 4) {
+                        is_blacklisted = tokens[3] == "Y";
+                    }
                 }
-                // cout << extracted_alias << " | " << extracted_command << " | " << extracted_type << " | " << extracted_description << endl;
 
                 // Append to data vector
-                data.push_back(Datum{id, extracted_alias, extracted_command, extracted_type, extracted_description});
+                data.push_back(Datum{id, extracted_alias, extracted_command, extracted_type, extracted_description, is_blacklisted});
 
                 id += 1;
             }
@@ -151,10 +175,11 @@ class Driver {
         
         struct Datum {
                 int id;
-                std::string alias;
-                std::string command;
-                std::string type;
-                std::string description;
+                string alias;
+                string command;
+                string type;
+                string description;
+                bool is_blacklisted;
 
                 bool operator<(Datum &other) {
                     if (type != other.type) {
@@ -166,14 +191,7 @@ class Driver {
                     return id < other.id;
                 }
 
-                void print() {
-                    std::cout << "id: " << id << " type: " << type
-                            << " alias: " << alias << " desc: "
-                            << description << std::endl;
-                }
-
                 friend ostream& operator<<(ostream &out, Datum d) {
-                    boost::replace_all(d.command, "'", "'\\''");
                     out << "alias " << d.alias << "='" << d.command << "'";
                     return out;
                 }
@@ -231,9 +249,10 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
         {"list", no_argument, nullptr, 'l'},
         {"new", no_argument, nullptr, 'n'},
         {"update", no_argument, nullptr, 'u'},
+        {"blacklist", required_argument, nullptr, 'b'},
     };
 
-    while ((choice = getopt_long(argc, argv, "hlnu", long_options, &option_index)) != -1) {
+    while ((choice = getopt_long(argc, argv, "hlnub:", long_options, &option_index)) != -1) {
         switch (choice) {
             case 'h':
                 print_help_menu();
@@ -249,16 +268,28 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
                 }
 
                 // Check args
-                if(inputs.size() < 2 || inputs.size() > 4) {
-                    cout << "Usage: alh -n [alias] [command] {type} {description}" << endl;
+                if(inputs.size() < 2 || inputs.size() > 5) {
+                    cout << "Usages:\n"
+                         << "\talh -n [alias] [command]\n"
+                         << "\talh -n [alias] [command] {do_blacklist}\n"
+                         << "\talh -n [alias] [command] {type} {description} {do_blacklist}" << endl;
                     exit(1);
                 }
                 passed_args['a'] = inputs[0];
                 passed_args['c'] = inputs[1];
-                if(inputs.size() > 2) {
+                if(inputs.size() == 3) {
+                    if(string(inputs[2]) == "Y") {
+                        passed_args['b'] = "true";
+                    }
+                }
+                // Read in optional arguments
+                else if(inputs.size() > 3) {
                     passed_args['t'] = inputs[2];
-                    if(inputs.size() == 4) {
-                        passed_args['d'] = inputs[3];
+                    passed_args['d'] = inputs[3];
+                    if(inputs.size() == 5) {
+                        if(string(inputs[4]) == "Y") {
+                            passed_args['b'] = "true";
+                        }
                     }
                 }
                 passed_args['n'] = "true";
@@ -282,6 +313,10 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
                 passed_args['t'] = inputs[1];
                 passed_args['d'] = inputs[2];
                 passed_args['u'] = "true";
+                break;
+            }
+            case 'b': {
+                passed_args['b'] = string(optarg);
                 break;
             }
             default:
