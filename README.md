@@ -18,9 +18,58 @@ That's what this utility aims to solve. I intend to create a more user-friendly 
 
 - Clone the git repository with `$ git clone https://github.com/alex-gedeon/alias-helper.git`
 - Compile and install the utility with `$ sudo make`
-- Test the output of `$ alh`, make sure you create a `~/.bash_aliases` file.
+- Test the output of `$ alh`, make sure you already have a `~/.bash_aliases` file.
 
-### Example usages
+### Demo
+
+In this example, I will be creating an alias to take me to the project directory of this git repo:
+
+``` none
+$ pwd
+/mnt/c/Projects/alias-helper
+$ alh -n alp "cd /mnt/c/Projects/alias-helper"
+$ rel # alias for 'source ~/.bash_aliases`
+$ cd ~
+$ pwd
+/home/alex
+$ alp
+$ pwd
+/mnt/c/Projects/alias-helper
+```
+
+I'm now able to be able to go straight into this directory with just a simple alias. It appears in the output of `-l` as such:
+
+``` none
+$ alh # or alh -l
++-----+------------+------------+----------------------------------------------------+
+| ID  | Type       | Alias      | Description                                        |
++-----+------------+------------+----------------------------------------------------+
+| 26  |            | alp        |                                                    |
+...
+```
+
+I did not give this alias a type or description when creating it, so let's update it with the shown ID of 26:
+
+``` none
+$ alh -u 26 "dir" "Alias project directory"
+$ alh
++-----+------------+------------+----------------------------------------------------+
+| ID  | Type       | Alias      | Description                                        |
++-----+------------+------------+----------------------------------------------------+
+| 26  | dir        | alp        | Alias project directory                            |
+...
+```
+
+It now appears under the proper category with the type and description columns filled in. If I wanted to blacklist this alias and omit it from the regular listing, it could be done as such:
+
+``` none
+$ alh -b 26
+```
+
+It will now only appear when blacklisted aliases are displayed with `$ alh -b`
+
+
+### Option usage
 
 #### Help menu
 
@@ -41,27 +90,18 @@ Usage: alh [OPTIONS]
 
 #### Listing aliases
 
-Listing non-blacklisted aliases in a formatted table can be done simply with `$ alh`, or `$alh -l`, where blacklisted aliases can be shown with `$ alh -b`. Attributes that do not fit into the column of a table are cut off, with the last fitting character replaced with a `#`.
+Listing non-blacklisted aliases in a formatted table can be done simply with `$ alh`, or `$alh -l`, where blacklisted aliases can be shown with `$ alh -b`. Attributes that do not fit into the column of a table are cut off cleanly with a `#`.
 
 ``` none
 $ alh
 +-----+------------+------------+----------------------------------------------------+
 | ID  | Type       | Alias      | Description                                        |
 +-----+------------+------------+----------------------------------------------------+
-| 25  | dir        | 388        | 388 dir                                            |
-| 16  |            | alex       | Windows home dir                                   |
-| 23  |            | chirp      | Chirp dir                                          |
+| 16  | dir        | alex       | Windows home dir                                   |
+| 26  |            | alp        | Alias project directory                            |
 | 24  |            | mseed      | Minecraft seed project dir                         |
 | 14  |            | projs      | Projects dir                                       |
 | 22  |            | school     | School dir                                         |
-| 15  |            | squirl     | Squirl dir                                         |
-+-----+------------+------------+----------------------------------------------------+
-| 7   | git        | ga         | Stage all files                                    |
-| 8   |            | gc         | git commit -m                                      |
-| 21  |            | gcm        | Checkout master                                    |
-| 10  |            | gpl        | git pull                                           |
-| 9   |            | gpu        | git push                                           |
-| 6   |            | gs         | git status                                         |
 +-----+------------+------------+----------------------------------------------------+
 | 19  | online     | drive      | Opens Google Drive in Chrome                       |
 +-----+------------+------------+----------------------------------------------------+
@@ -73,7 +113,7 @@ $ alh
 | 20  |            | pyswitch   | Switches default python3 version                   |
 +-----+------------+------------+----------------------------------------------------+
 | 1   | util       | cbal       | Edit aliases in vscode                             |
-| 17  |            | expl       | Opens explorer in .                                |
+| 17  |            | expl       | Opens Windows explorer in cwd                      |
 | 0   |            | rel        | Reloads aliases                                    |
 +-----+------------+------------+----------------------------------------------------+
 | ID  | Type       | Alias      | Description                                        |
@@ -81,6 +121,13 @@ $ alh
 $ alh -b
 +-----+------------+------------+----------------------------------------------------+
 | ID  | Type       | Alias      | Description                                        |
++-----+------------+------------+----------------------------------------------------+
+| 7   | git        | ga         | Add all files to git                               |
+| 8   |            | gc         | git commit -m                                      |
+| 21  |            | gcm        | Checkout master                                    |
+| 10  |            | gpl        | git pull                                           |
+| 9   |            | gpu        | git push                                           |
+| 6   |            | gs         | git status                                         |
 +-----+------------+------------+----------------------------------------------------+
 | 2   | util       | ..         | Go up a level                                      |
 | 3   |            | ...        | Go up 2 levels                                     |
@@ -100,6 +147,17 @@ $ alh -n
 Usage: alh -n [alias] [command] {type} {description}
 ```
 
+After the new alias has been written to `~/.bash_aliases`, it will have to be reloaded with either restarting the shell, or executing `source ~/.bash_aliases`, which of course can be an alias itself:
+
+``` none
+$ alh -n greeting "echo 'hello world'" util "Example alias"
+$ greeting
+greeting: command not found
+$ rel # does 'source ~/.bash_aliases'
+$ greeting
+hello world
+```
+
 #### Updating an alias
 
 If the type and description of an alias is not given at creation, such as if a previous `~/.bash_aliases` file had aliases created externally, they can be updated with the `-u` flag. This option requires the ID of the alias to fix, given through the table in `-l`, along with the new type and description for it. This can be seen by typing `$alh -u`, yielding the output of:
@@ -117,7 +175,7 @@ Removing an alias from the regular output of `$alh -l` can be done through the `
 
 Current Functionality:
 
-- Command line parsing for h, l, n, and u flags.
+- Command line parsing for h, l, n, u, and b flags.
 - Create, parse, and update aliases locally (in ~/.bash_aliases file)
 - Blacklist aliases from appearing in list menu, run -b with no arguments for blacklist
 
