@@ -4,7 +4,7 @@
 
 After typing repetitive commands like `$ cd ..`, `$ cd ../..`, `$ explorer.exe .`, and spending cumulative hours typing long `$ cd /mnt/c/Projects/.....` commands to get to my working directories, I decided to make this utility to make repetitive commands much more manageable through aliases.
 
-### Usefulness of aliases
+## Usefulness of aliases
 
 An alias is simply another name for something, where in this case it refers to another name for a complicated instruction. For example, it is quite tedious to have to constantly type a long command such as the following:  
 `$ cd /mnt/c/Projects/foo/bar/foo_bar/bar_foo/foo_bar_foo/target`  
@@ -14,13 +14,13 @@ This can be done manually with `$ echo "alias tdir='{long command}'" >> ~/.bash_
 
 That's what this utility aims to solve. I intend to create a more user-friendly system to manage aliases, by assigning user-inputted tags to them through types and descriptions, and printing out an organized table which summarizes the aliases created to date.
 
-### Installation
+## Installation
 
 - Clone the git repository with `$ git clone https://github.com/alex-gedeon/alias-helper.git`
 - Compile and install the utility with `$ sudo make`
 - Test the output of `$ alh`, make sure you already have a `~/.bash_aliases` file.
 
-### Demo
+## Demo
 
 In this example, I will be creating an alias to take me to the project directory of this git repo:
 
@@ -68,10 +68,9 @@ $ alh -b 26
 
 It will now only appear when blacklisted aliases are displayed with `$ alh -b`
 
+## Option usage
 
-### Option usage
-
-#### Help menu
+### Help menu
 
 The help menu can be accessed with the `-h` flag, run as `$ alh -h` for an output of:
 
@@ -88,7 +87,7 @@ Usage: alh [OPTIONS]
         -b: Show blacklist, or toggle an alias with a given ID
 ```
 
-#### Listing aliases
+### Listing aliases
 
 Listing non-blacklisted aliases in a formatted table can be done simply with `$ alh`, or `$alh -l`, where blacklisted aliases can be shown with `$ alh -b`. Attributes that do not fit into the column of a table are cut off cleanly with a `#`.
 
@@ -138,7 +137,7 @@ $ alh -b
 +-----+------------+------------+----------------------------------------------------+
 ```
 
-#### Creating an alias
+### Creating an alias
 
 Creating an alias is done through the `-n` flag, and expects two to four arguments for the alias itself, the command it replaces, and optionally the alias's type and description. This can be seen by typing `$ alh -n`, yielding the output of:
 
@@ -158,7 +157,7 @@ $ greeting
 hello world
 ```
 
-#### Updating an alias
+### Updating an alias
 
 If the type and description of an alias is not given at creation, such as if a previous `~/.bash_aliases` file had aliases created externally, they can be updated with the `-u` flag. This option requires the ID of the alias to fix, given through the table in `-l`, along with the new type and description for it. This can be seen by typing `$alh -u`, yielding the output of:
 
@@ -167,7 +166,7 @@ $ alh -u
 Usage: alh -u [ID] [new type] [new description]
 ```
 
-#### Blacklisting an alias
+### Blacklisting an alias
 
 Removing an alias from the regular output of `$alh -l` can be done through the `-b` flag. This option takes in either zero arguments, whereupon it prints all blacklisted aliases, or one argument in the form of the target alias's ID.
 
