@@ -37,9 +37,14 @@ class Driver {
 
                 string curr_type = "\n";
                 for(auto datum : data) {
-                    if(datum.is_blacklisted) {
+                    // Continue if both blacklisting and not blacklisted or inverse
+                    if(passed_args.find('b') == passed_args.end() && datum.is_blacklisted) {
                         continue;
                     }
+                    else if (passed_args.find('b') != passed_args.end() && !datum.is_blacklisted) {
+                        continue;
+                    }
+
                     if (curr_type != datum.type) {
                         table.print_horizontal_line();
                         curr_type = datum.type;
@@ -80,55 +85,91 @@ class Driver {
 
             // Check u argument
             if(passed_args.find('u') != passed_args.end()) {
-                // Read in aliases, error check idx
-                read_in_aliases();
-                if(data.size() < stoi(passed_args['i'])) {
-                    cout << "Error: invalid idx" << endl;
-                    exit(1);
-                }
+                update_line_in_file(stoi(passed_args['i']), passed_args['t'], passed_args['d'], false);
+                return;
+            }
 
-                // Two streams: reading and writing
-                string tmp_alias = alias_dir + ".tmp";
-                ifstream fin(alias_dir);
-                ofstream fout(tmp_alias);
-                
-                // Read in from one, dump to other
-                string line;
-                int idx = 0;
-                while(getline(fin, line)) {
-                    // If hit index, print alias and command, print type and description
-                    if(idx == stoi(passed_args['i'])) {
-                        for(int i = 0; i < data.size(); ++i) {
-                            if(data[i].id == stoi(passed_args['i'])) {
-                                fout << data[i] << " #" << passed_args['t'] << "#" << passed_args['d'] << "#";
+            // Check b argument
+            if(passed_args.find('b') != passed_args.end()) {
+                if(passed_args['b'] == "false") {
+                    cout << "Error: no ID given" << endl;
+                    exit(0);
+                }
+                update_line_in_file(stoi(passed_args['b']), "", "", true);
+                return;
+            }
+        }
+
+    private:
+        void update_line_in_file(int id_to_update, string new_type, string new_desc, bool flip_blacklist) {
+            // Read in aliases, error check idx
+            read_in_aliases();
+            if(data.size() < id_to_update) {
+                cout << "Error: invalid idx" << endl;
+                exit(1);
+            }
+
+            // Two streams: reading and writing
+            string tmp_alias = alias_dir + ".tmp";
+            ifstream fin(alias_dir);
+            ofstream fout(tmp_alias);
+            
+            // Read in from one, dump to other
+            string line;
+            int idx = 0;
+            while(getline(fin, line)) {
+                // If hit index, print alias and command, print type and description
+                if(idx == id_to_update) {
+                    for(int i = 0; i < data.size(); ++i) {
+                        if(data[i].id == id_to_update) {
+                            fout << data[i] << " #";
+                            // Update type if requested
+                            if(new_type == "") {
+                                fout << data[i].type;
+                            }
+                            else {
+                                fout << new_type;
+                            }
+                            fout << "#";
+                            // Update description if requested
+                            if(new_desc == "") {
+                                fout << data[i].description;
+                            }
+                            else {
+                                fout << new_desc;
+                            }
+                            fout << "#";
+
+                            // Flip blacklist if requested
+                            if(flip_blacklist) {
+                                if(data[i].is_blacklisted) {
+                                    fout << "N";
+                                }
+                                else {
+                                    fout << "Y";
+                                }
+                            }
+                            else {
                                 if(data[i].is_blacklisted) {
                                     fout << "Y";
                                 }
                                 else {
                                     fout << "N";
                                 }
-                                fout << endl;
-                                break;
                             }
+                            fout << endl;
+                            break;
                         }
                     }
-                    else {
-                        fout << line << endl;
-                    }
-                    ++idx;
                 }
-                rename(tmp_alias.c_str(), alias_dir.c_str());
-                return;
+                else {
+                    fout << line << endl;
+                }
+                ++idx;
             }
-
-            // Check b argument
-            if(passed_args.find('b') != passed_args.end()) {
-                cout << "here" << endl;
-                exit(0);
-            }
+            rename(tmp_alias.c_str(), alias_dir.c_str());
         }
 
-    private:
         void read_in_aliases() {
             string line;
             ifstream alias_filestream(alias_dir);
@@ -249,10 +290,10 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
         {"list", no_argument, nullptr, 'l'},
         {"new", no_argument, nullptr, 'n'},
         {"update", no_argument, nullptr, 'u'},
-        {"blacklist", required_argument, nullptr, 'b'},
+        {"blacklist", no_argument, nullptr, 'b'},
     };
 
-    while ((choice = getopt_long(argc, argv, "hlnub:", long_options, &option_index)) != -1) {
+    while ((choice = getopt_long(argc, argv, "hlnub", long_options, &option_index)) != -1) {
         switch (choice) {
             case 'h':
                 print_help_menu();
@@ -316,7 +357,17 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
                 break;
             }
             case 'b': {
-                passed_args['b'] = string(optarg);
+                // Read in argument for ID
+                vector<string> inputs;
+                for(; optind < argc && *argv[optind] != '-'; ++optind) {
+                    inputs.push_back(string(argv[optind]));
+                }
+                if(inputs.size() == 0) {
+                    passed_args['b'] = "false";
+                }
+                else {
+                    passed_args['b'] = string(inputs[0]);
+                }
                 break;
             }
             default:
