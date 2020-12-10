@@ -193,13 +193,12 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
 
 int main(int argc, char** argv) {
     // Argument check
+    unordered_map<char, string> passed_args;
     if (argc == 1) {
-        print_help_menu();
-        exit(0);
+        passed_args['l'] == "true";
     }
 
     // Read in command line arguments
-    unordered_map<char, string> passed_args;
     parse_command_line(argc, argv, passed_args);
 
     // Get alias filepath
