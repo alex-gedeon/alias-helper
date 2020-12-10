@@ -10,9 +10,10 @@ void print_help_menu() {
                     << "Usage: alh [OPTIONS]\n"
                     << "\t-h: Prints help menu\n"
                     << "\t-l: Lists available aliases\n"
-                    << "\t-n: Creates a new alias. Requires -t and -d\n"
-                    << "\t-t: Specifies alias type\n"
+                    << "\t-n: Creates a new alias. Requires -a, -c, -t, and -d\n"
                     << "\t-a: Specifies alias shorcut\n"
+                    << "\t-c: Specifies alias command\n"
+                    << "\t-t: Specifies alias type\n"
                     << "\t-d: Specifies alias description\n"
                     << "\t-i: Imports aliases from a file\n";
 }

@@ -168,13 +168,14 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
         {"help", no_argument, nullptr, 'h'},
         {"list", no_argument, nullptr, 'l'},
         {"new", no_argument, nullptr, 'n'},
-        {"type", required_argument, nullptr, 't'},
         {"alias", required_argument, nullptr, 'a'},
+        {"command", required_argument, nullptr, 'c'},
+        {"type", required_argument, nullptr, 't'},
         {"description", required_argument, nullptr, 'd'},
         {"import", required_argument, nullptr, 'i'},
     };
 
-    while ((choice = getopt_long(argc, argv, "hlnt:a:d:i:", long_options, &option_index)) != -1) {
+    while ((choice = getopt_long(argc, argv, "hlna:c:t:d:i:", long_options, &option_index)) != -1) {
         switch (choice) {
             case 'h':
                 print_help_menu();
@@ -185,11 +186,14 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
             case 'n':
                 cout << "TODO: new\n";
                 exit(0);
-            case 't':
-                cout << "TODO: type\n";
-                exit(0);
             case 'a':
                 cout << "TODO: alias\n";
+                exit(0);
+            case 'c':
+                cout << "TODO: command\n";
+                exit(0);
+            case 't':
+                cout << "TODO: type\n";
                 exit(0);
             case 'd':
                 cout << "TODO: description\n";
