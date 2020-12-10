@@ -4,11 +4,13 @@
 #include <string>
 #include <unordered_map>
 #include <fstream>
+#include <vector>
 
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 
+#include "util.h"
 
 using namespace std;
 
@@ -22,18 +24,55 @@ class Driver {
                 string line;
                 ifstream alias_filestream(alias_dir);
                 while(getline(alias_filestream, line)) {
+                    // Properly formatted line:
+                    // alias temp='echo "hello world!"'#{type}#{description}
+
                     cout << line << endl;
+                    // Split by space first to extract alias
+                    int first_space = line.find(' ');
+                    int first_equals = line.find('=');
+                    int first_hash = line.find('#');
+                    string extracted_alias = line.substr(first_space+1, first_equals-first_space-1);
+
+                    string extracted_command;
+                    if(first_hash != -1) {
+                        extracted_command = line.substr(first_equals+2, first_hash-first_equals-3);
+                    }
+                    else {
+                        extracted_command = line.substr(first_equals+2, line.size() - first_equals-3);
+                    }
+                    cout << extracted_alias << " " << extracted_command << endl;
                 }
             }
         }
+
     private:
         unordered_map<char, string> passed_args;
         string alias_dir;
+
+        struct Datum {
+            int id;
+            std::string alias;
+            std::string command;
+            std::string type;
+            std::string description;
+
+            bool operator<(Datum &other) {
+                if (type != other.type) {
+                    return type < other.type;
+                }
+                return alias < other.alias;
+            }
+
+            void print() {
+                std::cout << "id: " << id << " type: " << type
+                        << " alias: " << alias << " desc: "
+                        << description << std::endl;
+            }
+        };
 };
 
 void parse_command_line(int argc, char** argv, unordered_map<char, string>& passed_args);
-
-void print_help_menu();
 
 int main(int argc, char** argv) {
     // Argument check
@@ -109,17 +148,4 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
                 exit(1);
         }
     }
-}
-
-void print_help_menu() {
-    cout << "alias helper, version 3.0.0\n"
-                    << "Homepage: https://github.com/alex-gedeon/alias-helper\n\n"
-                    << "Usage: alh [OPTIONS]\n"
-                    << "\t-h: Prints help menu\n"
-                    << "\t-l: Lists available aliases\n"
-                    << "\t-n: Creates a new alias. Requires -t and -d\n"
-                    << "\t-t: Specifies alias type\n"
-                    << "\t-a: Specifies alias shorcut\n"
-                    << "\t-d: Specifies alias description\n"
-                    << "\t-i: Imports aliases from a file\n";
 }

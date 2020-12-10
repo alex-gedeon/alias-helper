@@ -21,5 +21,5 @@ clean:
 	@rm -f testing/*.exe
 
 full_install:
-	@g++ src/alh.cpp -lstdc++fs -std=c++11 -o src/alh
+	@g++ src/alh.cpp src/util.cpp -lstdc++fs -std=c++11 -o src/alh
 	@cp src/alh /usr/local/bin/
