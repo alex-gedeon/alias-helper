@@ -1,0 +1,12 @@
+alias rel='source ~/.bash_aliases' #util#Reloads aliases
+alias ..='cd ..'\''' #util#Go up a level#Y
+alias ...='\''cd ../..'\''' #util#Go up 2 levels#Y
+alias ....='\''cd ../../..'\''' #util#Go up 3 levels#Y
+alias .....='\''cd ../../../..' #util#Go up 4 levels#Y
+alias gs='git status' #git#git status#Y
+alias ga='git add .' #git#Add all files to git#Y
+alias gc='git commit -m' #git#git commit -m#Y
+alias gpu='git push' #git#git push#Y
+alias gpl='git pull' #git#git pull#Y
+alias act='source env/bin/activate' #python#Activate venv
+alias deac='deactivate' #python#Deactivates venv

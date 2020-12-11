@@ -66,6 +66,23 @@ class Driver {
                 update_line_in_file(stoi(passed_args['b']), "", "", true);
                 return;
             }
+
+            // Check r argument
+            if(passed_args.find('r') != passed_args.end()) {
+                // Read from inputted file, append to alias file
+                ifstream infile(passed_args['r']);
+                if(!infile.is_open()) {
+                    cout << "Error: invalid file" << endl;
+                    exit(1);
+                }
+                ofstream outfile(alias_dir, ios::app);
+
+                string line;
+                while(getline(infile, line)) {
+                    outfile << line << endl;
+                }
+                return;
+            }
         }
 
     private:
@@ -288,9 +305,10 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
         {"new", no_argument, nullptr, 'n'},
         {"update", no_argument, nullptr, 'u'},
         {"blacklist", no_argument, nullptr, 'b'},
+        {"read", required_argument, nullptr, 'r'}
     };
 
-    while ((choice = getopt_long(argc, argv, "hlnub", long_options, &option_index)) != -1) {
+    while ((choice = getopt_long(argc, argv, "hlnubr:", long_options, &option_index)) != -1) {
         switch (choice) {
             case 'h':
                 print_help_menu();
@@ -367,6 +385,9 @@ void parse_command_line(int argc, char** argv, unordered_map<char, string>& pass
                 }
                 break;
             }
+            case 'r':
+                passed_args['r'] = optarg;
+                break;
             default:
 				cerr << "Invalid option, or missing command line argument. Try with -h flag for help." << endl;
                 exit(1);

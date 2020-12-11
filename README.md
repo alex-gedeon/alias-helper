@@ -170,11 +170,19 @@ Usage: alh -u [ID] [new type] [new description]
 
 Removing an alias from the regular output of `$alh -l` can be done through the `-b` flag. This option takes in either zero arguments, whereupon it prints all blacklisted aliases, or one argument in the form of the target alias's ID.
 
+### Read in aliases
+
+Defined aliases in another file can be written into `~/.bash_aliases` with the `-r` flag. A listing of sample aliases is given in `sample_aliases.txt`, and can be read in as such:
+
+``` none
+$ alh -r sample_aliases.txt
+```
+
 ### Features
 
 Current Functionality:
 
-- Command line parsing for h, l, n, u, and b flags.
+- Command line parsing for h, l, n, u, b, and r flags.
 - Create, parse, and update aliases locally (in ~/.bash_aliases file)
 - Blacklist aliases from appearing in list menu, run -b with no arguments for blacklist
 
