@@ -10,7 +10,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
-#include <boost/algorithm/string.hpp>
 
 #include "util.h"
 #include "Table.h"
@@ -34,7 +33,7 @@ class Driver {
                 ofstream outfile(alias_dir, ios_base::app);
 
                 // Escape quotes if exist
-                boost::replace_all(passed_args['c'], "'", "'\\''");
+                ReplaceStringInPlace(passed_args['c'], "'", "'\\''");
                 outfile << "alias " << passed_args['a'] << "='" << passed_args['c'] << "'";
                 if(passed_args.find('t') != passed_args.end()) {
                     outfile << " #" << passed_args['t'];

@@ -26,3 +26,11 @@ void split_line_by_delimiter(const string &str, std::vector<string> &pieces, cha
 	}
 	pieces.push_back(str.substr(last_split_index, string::npos));
 }
+
+void ReplaceStringInPlace(string& subject, const string& search, const string& replace) {
+    size_t pos = 0;
+    while ((pos = subject.find(search, pos)) != std::string::npos) {
+         subject.replace(pos, search.length(), replace);
+         pos += replace.length();
+    }
+}
