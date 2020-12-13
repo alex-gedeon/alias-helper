@@ -235,7 +235,7 @@ class Driver {
                 string description;
                 bool is_blacklisted;
 
-                bool operator<(Datum &other) {
+                bool operator<(const Datum &other) const {
                     if (type != other.type) {
                         return type < other.type;
                     }
