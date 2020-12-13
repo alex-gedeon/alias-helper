@@ -10,7 +10,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
-#include <boost/algorithm/string.hpp>
 
 #include "util.h"
 #include "Table.h"
@@ -34,7 +33,7 @@ class Driver {
                 ofstream outfile(alias_dir, ios_base::app);
 
                 // Escape quotes if exist
-                boost::replace_all(passed_args['c'], "'", "'\\''");
+                ReplaceStringInPlace(passed_args['c'], "'", "'\\''");
                 outfile << "alias " << passed_args['a'] << "='" << passed_args['c'] << "'";
                 if(passed_args.find('t') != passed_args.end()) {
                     outfile << " #" << passed_args['t'];
@@ -118,7 +117,7 @@ class Driver {
         void update_line_in_file(int id_to_update, string new_type, string new_desc, bool flip_blacklist) {
             // Read in aliases, error check idx
             read_in_aliases();
-            if(data.size() < id_to_update) {
+            if(int(data.size()) < id_to_update) {
                 cout << "Error: invalid idx" << endl;
                 exit(1);
             }
@@ -134,7 +133,7 @@ class Driver {
             while(getline(fin, line)) {
                 // If hit index, print alias and command, print type and description
                 if(idx == id_to_update) {
-                    for(int i = 0; i < data.size(); ++i) {
+                    for(size_t i = 0; i < data.size(); ++i) {
                         if(data[i].id == id_to_update) {
                             fout << data[i] << " #";
                             // Update type if requested
@@ -236,7 +235,7 @@ class Driver {
                 string description;
                 bool is_blacklisted;
 
-                bool operator<(Datum &other) {
+                bool operator<(const Datum &other) const {
                     if (type != other.type) {
                         return type < other.type;
                     }
@@ -255,7 +254,7 @@ class Driver {
         unordered_map<char, string> passed_args;
         string alias_dir;
         int length_id = 3;
-        int length_command = 20;
+        // int length_command = 20;
         int length_alias = 10;
         int length_type = 10;
         int length_description = 50;
@@ -268,7 +267,7 @@ int main(int argc, char** argv) {
     // Argument check
     unordered_map<char, string> passed_args;
     if (argc == 1) {
-        passed_args['l'] == "true";
+        passed_args['l'] = "true";
     }
 
     // Read in command line arguments

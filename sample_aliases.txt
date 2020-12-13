@@ -1,4 +1,5 @@
-alias rel='source ~/.bash_aliases' #util#Reloads aliases
+alias rel='source ~/.bash_aliases' #util#Reloads aliases#N
+alias cbal='code ~/.bash_aliases' #util#Edit aliases in vscode#N
 alias ..='cd ..' #util#Go up a level#Y
 alias ...='cd ../..' #util#Go up 2 levels#Y
 alias ....='cd ../../..' #util#Go up 3 levels#Y
@@ -8,5 +9,8 @@ alias ga='git add .' #git#Add all files to git#Y
 alias gc='git commit -m' #git#git commit -m#Y
 alias gpu='git push' #git#git push#Y
 alias gpl='git pull' #git#git pull#Y
-alias act='source env/bin/activate' #python#Activate venv
-alias deac='deactivate' #python#Deactivates venv
+alias gcm='git checkout master' #git#Checkout master#Y
+alias act='source env/bin/activate' #python#Activate venv#N
+alias deac='deactivate' #python#Deactivates venv#N
+alias pyswitch='sudo update-alternatives --config python' #python#Switches default python3 version#N
+alias pyenv='virtualenv env -p' #python#Create a venv, expects version#N
