@@ -267,7 +267,7 @@ int main(int argc, char** argv) {
     // Argument check
     unordered_map<char, string> passed_args;
     if (argc == 1) {
-        passed_args['l'] == "true";
+        passed_args['l'] = "true";
     }
 
     // Read in command line arguments
