@@ -18,7 +18,7 @@ void print_help_menu() {
 
 void split_line_by_delimiter(const string &str, std::vector<string> &pieces, char delimiter) {
     int last_split_index = 0;
-	for (int i = 0; i < str.size(); ++i) {
+	for (size_t i = 0; i < str.size(); ++i) {
 		if (str[i] == delimiter && i != 0) {
 			pieces.push_back(str.substr(last_split_index, i - last_split_index));
 			last_split_index = i + 1;

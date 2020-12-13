@@ -9,7 +9,7 @@ Table::Table(const vector<int> &lengths_in)
     : lengths(lengths_in) {}
 
 void Table::print_horizontal_line() {
-	for (int i = 0; i < lengths.size(); ++i) {
+	for (size_t i = 0; i < lengths.size(); ++i) {
 		cout << "+";
 		for (int j = 0; j < lengths[i] + 2; ++j) {
 			cout << "-";
@@ -39,7 +39,7 @@ void Table::trim_string(string &input) {
 
 string Table::pad_blanks(string &input, int column_width) {
 	trim_string(input);
-	if (input.size() > column_width) {
+	if (int(input.size()) > column_width) {
 		input = input.substr(0, column_width - 1);
 		input += "#";
 		input = " " + input + " ";

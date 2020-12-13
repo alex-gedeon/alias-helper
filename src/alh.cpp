@@ -117,7 +117,7 @@ class Driver {
         void update_line_in_file(int id_to_update, string new_type, string new_desc, bool flip_blacklist) {
             // Read in aliases, error check idx
             read_in_aliases();
-            if(data.size() < id_to_update) {
+            if(int(data.size()) < id_to_update) {
                 cout << "Error: invalid idx" << endl;
                 exit(1);
             }
@@ -133,7 +133,7 @@ class Driver {
             while(getline(fin, line)) {
                 // If hit index, print alias and command, print type and description
                 if(idx == id_to_update) {
-                    for(int i = 0; i < data.size(); ++i) {
+                    for(size_t i = 0; i < data.size(); ++i) {
                         if(data[i].id == id_to_update) {
                             fout << data[i] << " #";
                             // Update type if requested
