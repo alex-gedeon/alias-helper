@@ -254,7 +254,7 @@ class Driver {
         unordered_map<char, string> passed_args;
         string alias_dir;
         int length_id = 3;
-        int length_command = 20;
+        // int length_command = 20;
         int length_alias = 10;
         int length_type = 10;
         int length_description = 50;
