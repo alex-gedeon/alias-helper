@@ -1,4 +1,4 @@
-# alias-helper v3.0
+# alias-helper v3.1
 
 ## Terminal based utility intended to streamline the usage of aliases
 
@@ -192,7 +192,6 @@ In development:
 
 Future plans:
 
-- Alias creation should fail if name has already been used
 - Allow user to create and view variables with similar functionality, would allow for commands such as `cd ${PROJ_DIR}/...` instead of retyping entire path (aliases within aliases I suppose)
 - Ability to change printed table size in config file
 - Blacklist multiple aliases at once

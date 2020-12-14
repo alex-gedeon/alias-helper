@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <unordered_set>
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -31,6 +32,13 @@ class Driver {
             if(passed_args.find('n') != passed_args.end()) {
                 // Append new alias to file
                 ofstream outfile(alias_dir, ios_base::app);
+
+                // Skip if exists
+                read_in_aliases();
+                if(used_aliases.find(passed_args['a']) != used_aliases.end()) {
+                    cout << "Alias '" << passed_args['a'] << "' already exists, skipping" << endl;
+                    return;
+                }
 
                 // Escape quotes if exist
                 ReplaceStringInPlace(passed_args['c'], "'", "'\\''");
@@ -68,6 +76,9 @@ class Driver {
 
             // Check r argument
             if(passed_args.find('r') != passed_args.end()) {
+                // Read in known aliases
+                read_in_aliases();
+
                 // Read from inputted file, append to alias file
                 ifstream infile(passed_args['r']);
                 if(!infile.is_open()) {
@@ -78,6 +89,14 @@ class Driver {
 
                 string line;
                 while(getline(infile, line)) {
+                    int first_space = line.find(' ');
+                    int first_equals = line.find('=');
+                    string extracted_alias = line.substr(first_space+1, first_equals-first_space-1);
+                    if(used_aliases.find(extracted_alias) != used_aliases.end()) {
+                        cout << "Alias '" << extracted_alias << "' already exists, skipping" << endl;
+                        continue;
+                    }
+                    used_aliases.insert(extracted_alias);
                     outfile << line << endl;
                 }
                 return;
@@ -189,14 +208,25 @@ class Driver {
             int id = 0;
             while(getline(alias_filestream, line)) {
                 // Properly formatted line:
-                // alias temp='echo "hello world!"'#{type}#{description}
+                // alias temp='echo "hello world!"'#{type}#{description}#{do_blacklist: Y or N}
 
-                // cout << line << endl;
+                // Check for commented line
+                if(line.size() == 0) {
+                    ++id;
+                    continue;
+                }
+                else if(line[0] == '#') {
+                    ++id;
+                    continue;
+                }
                 // Split by space first to extract alias
                 int first_space = line.find(' ');
                 int first_equals = line.find('=');
                 int first_hash = line.find('#');
                 string extracted_alias = line.substr(first_space+1, first_equals-first_space-1);
+                
+                // Keep track of used aliases
+                used_aliases.insert(extracted_alias);
 
                 string extracted_command;
                 if(first_hash != -1) {
@@ -206,7 +236,7 @@ class Driver {
                     extracted_command = line.substr(first_equals+2, line.size() - first_equals-3);
                 }
 
-                // Extract type and description
+                // Extract type, description, and whether to blacklist
                 vector<string> tokens;
                 split_line_by_delimiter(line, tokens, '#');
                 string extracted_type, extracted_description;
@@ -252,6 +282,7 @@ class Driver {
             };
         vector<Datum> data;
         unordered_map<char, string> passed_args;
+        unordered_set<string> used_aliases;
         string alias_dir;
         int length_id = 3;
         // int length_command = 20;
